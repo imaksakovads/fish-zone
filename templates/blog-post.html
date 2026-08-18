@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <link rel="alternate" hreflang="ru" href="{{canonical}}">
+
+    <title>{{title}} | Fish Zone</title>
+    <meta name="description" content="{{description}}">
+    <link rel="canonical" href="{{canonical}}">
+
+    <!-- Open Graph -->
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{canonical}}">
+    <meta property="og:title" content="{{title}}">
+    <meta property="og:description" content="{{description}}">
+    <meta property="og:image" content="{{og_image}}">
+    <meta property="og:image:alt" content="{{og_image_alt}}">
+    <meta property="og:site_name" content="{{site_name}}">
+    <meta property="article:published_time" content="{{article_date_iso}}">
+    <meta property="article:author" content="{{article_author}}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{title}}">
+    <meta name="twitter:description" content="{{description}}">
+    <meta name="twitter:image" content="{{og_image}}">
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">{{jsonld_article}}</script>
+    <script type="application/ld+json">{{jsonld_breadcrumbs}}</script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{site_url}}/favicon.svg">
+
+    <!-- Tailwind + Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                        display: ['Oswald', 'sans-serif'],
+                    },
+                    colors: {
+                        black: '#0a0a0a',
+                        water: '#0e7490',
+                        offwhite: '#f4f4f4',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="antialiased bg-white text-black">
+
+<!-- ===== HEADER ===== -->
+<header class="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
+    <div class="max-w-[1600px] mx-auto flex justify-between items-center px-6 py-4">
+        <a href="{{site_url}}" class="font-display font-bold text-2xl tracking-tighter uppercase">
+            Fish<span class="text-water">Zone</span>
+        </a>
+        <nav class="flex gap-6 items-center">
+            <a href="{{blog_url}}/index.html" class="text-sm uppercase tracking-widest hover:text-water transition border-b border-black">Блог</a>
+            <a href="{{blog_url}}/?cat=tackle" class="text-sm uppercase tracking-widest hover:text-water transition hidden md:inline">Снасти</a>
+            <a href="{{blog_url}}/?cat=technique" class="text-sm uppercase tracking-widest hover:text-water transition hidden md:inline">Техники</a>
+        </nav>
+    </div>
+</header>
+
+<!-- ===== BREADCRUMBS ===== -->
+<nav class="pt-24 pb-4 px-6 max-w-[1600px] mx-auto" aria-label="Хлебные крошки">
+    <ol class="flex flex-wrap items-center gap-2 text-xs font-mono text-gray-400">
+        <li><a href="{{site_url}}" class="hover:text-black transition">Главная</a></li>
+        <li><span class="text-gray-300">/</span></li>
+        <li><a href="{{blog_url}}/index.html" class="hover:text-black transition">Блог</a></li>
+        <li><span class="text-gray-300">/</span></li>
+        <li><span class="text-black">{{title}}</span></li>
+    </ol>
+</nav>
+
+<!-- ===== ARTICLE ===== -->
+<main class="max-w-[1600px] mx-auto px-6 pb-20">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
+
+        <!-- Sidebar -->
+        <aside class="hidden lg:block lg:col-span-3">
+            <div class="sticky top-28">
+                <div class="mb-8 p-6 border border-gray-200">
+                    <p class="font-display text-sm uppercase tracking-widest mb-1">Рубрика</p>
+                    <p class="text-lg font-display uppercase text-water">{{article_category}}</p>
+                </div>
+                {{article_toc}}
+                <div class="flex flex-wrap gap-2 mt-6">
+                    {{article_tags_html}}
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <div class="lg:col-span-9">
+            <header class="mb-10">
+                <div class="flex items-center gap-4 mb-4">
+                    <time datetime="{{article_date_iso}}" class="font-mono text-xs text-gray-400 uppercase">{{article_date}}</time>
+                    <span class="text-gray-300">·</span>
+                    <span class="font-mono text-xs text-gray-400">{{article_read_time}} мин чтения</span>
+                </div>
+                <h1 class="font-display text-4xl md:text-5xl lg:text-6xl uppercase leading-none mb-6">{{title}}</h1>
+                <p class="text-lg text-gray-600 leading-relaxed max-w-2xl">{{description}}</p>
+            </header>
+
+            <!-- Cover image -->
+            <figure class="mb-12 border border-gray-200 overflow-hidden">
+                <img src="{{og_image}}" alt="{{og_image_alt}}" width="1200" height="675" loading="eager" class="w-full h-auto object-cover">
+                <figcaption class="p-4 text-xs text-gray-400 font-mono">{{og_image_alt}} — Fish Zone</figcaption>
+            </figure>
+
+            <!-- Mobile TOC -->
+            <details class="lg:hidden mb-10 border border-gray-200 group" open>
+                <summary class="p-4 font-display text-sm uppercase tracking-widest cursor-pointer select-none flex justify-between items-center [&::-webkit-details-marker]:hidden">
+                    Содержание статьи
+                    <svg class="w-4 h-4 transition-transform duration-300 group-open:rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </summary>
+                <div class="px-4 pb-4">{{article_toc}}</div>
+            </details>
+
+            <!-- Article body -->
+            <article class="prose-custom leading-relaxed text-gray-800">
+                {{article_body}}
+            </article>
+
+            <footer class="mt-16 pt-8 border-t border-gray-200">
+                <div class="flex items-center gap-4 mb-8">
+                    <span class="font-mono text-xs text-gray-400">Поделиться:</span>
+                    <a href="https://t.me/share/url?url={{canonical}}&text={{title}}" target="_blank" rel="noopener" class="text-sm border border-gray-300 px-4 py-2 hover:bg-black hover:text-white transition font-mono">Telegram</a>
+                    <a href="https://wa.me/?text={{title}}%20{{canonical}}" target="_blank" rel="noopener" class="text-sm border border-gray-300 px-4 py-2 hover:bg-black hover:text-white transition font-mono">WhatsApp</a>
+                </div>
+
+                <!-- Related / Next -->
+                <div class="bg-black text-white p-8 text-center">
+                    <p class="font-display text-2xl uppercase mb-2">Больше материалов о спиннинге</p>
+                    <p class="text-gray-400 mb-6 text-sm">Снасти, приманки, техники и виды рыб — в блоге Fish Zone</p>
+                    <a href="{{blog_url}}/index.html" class="inline-block bg-white text-black px-8 py-4 font-display uppercase tracking-widest text-sm hover:bg-offwhite transition">Все статьи</a>
+                </div>
+            </footer>
+        </div>
+    </div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="border-t border-gray-200 py-8 px-6">
+    <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="font-mono text-xs text-gray-400">© {{site_name}} {{copyright_year}}. Блог о спиннинговой ловле.</p>
+        <div class="flex gap-6">
+            <a href="{{blog_url}}/index.html" class="text-xs font-mono text-gray-400 hover:text-black transition">Блог</a>
+            <a href="{{blog_url}}/?cat=tackle" class="text-xs font-mono text-gray-400 hover:text-black transition">Снасти</a>
+            <a href="{{blog_url}}/?cat=fish" class="text-xs font-mono text-gray-400 hover:text-black transition">Виды рыб</a>
+        </div>
+    </div>
+</footer>
+
+<!-- ===== PROSE STYLES ===== -->
+<style>
+    .prose-custom { font-size: 1.0625rem; line-height: 1.8; }
+    .prose-custom h2 {
+        font-family: 'Oswald', sans-serif; font-size: 2rem; text-transform: uppercase;
+        font-weight: 700; color: #0a0a0a; margin-top: 2.5em; margin-bottom: 0.75em; line-height: 1.2;
+    }
+    .prose-custom h3 {
+        font-family: 'Oswald', sans-serif; font-size: 1.5rem; text-transform: uppercase;
+        font-weight: 500; color: #0a0a0a; margin-top: 2em; margin-bottom: 0.5em; line-height: 1.25;
+    }
+    .prose-custom h4 {
+        font-family: 'Oswald', sans-serif; font-size: 1.2rem; text-transform: uppercase;
+        font-weight: 400; color: #333; margin-top: 1.5em; margin-bottom: 0.5em;
+    }
+    .prose-custom p { margin-bottom: 1.25em; }
+    .prose-custom > p:first-of-type { font-size: 1.25rem; color: #4b5563; line-height: 1.6; font-weight: 300; }
+    .prose-custom strong { font-weight: 600; color: #0a0a0a; }
+    .prose-custom a { color: #0e7490; text-decoration: underline; text-decoration-color: #99f6e4; text-underline-offset: 2px; transition: text-decoration-color 0.2s; }
+    .prose-custom a:hover { text-decoration-color: #0e7490; }
+    .prose-custom ul { margin-bottom: 1.25em; padding-left: 0; list-style: none; }
+    .prose-custom ol { margin-bottom: 1.25em; padding-left: 1.5em; }
+    .prose-custom li { margin-bottom: 0.5em; }
+    .prose-custom ul li { position: relative; padding-left: 1.5em; }
+    .prose-custom ul li::before { content: "▶"; position: absolute; left: 0; top: 0; color: #0e7490; font-size: 0.6em; line-height: inherit; }
+    .prose-custom blockquote { border-left: 3px solid #0e7490; background-color: #f9fafb; padding: 1.5em; margin: 1.5em 0; color: #111827; font-size: 1.125rem; }
+    .prose-custom img { width: 100%; height: auto; border: 1px solid #eee; margin: 1.5em 0; }
+    .prose-custom table { display: block; overflow-x: auto; white-space: nowrap; border-collapse: collapse; margin: 1.5em 0; font-size: 0.9375rem; width: 100%; }
+    @media (min-width: 768px) { .prose-custom table { display: table; white-space: normal; } }
+    .prose-custom th { background: #f4f4f4; color: #0a0a0a; font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 500; font-size: 0.875rem; letter-spacing: 0.05em; padding: 0.75em 1em; text-align: left; }
+    .prose-custom td { padding: 0.75em 1em; border-bottom: 1px solid #eee; }
+    .prose-custom tr:nth-child(even) td { background: #fafafa; }
+    .prose-custom code { background: #f4f4f4; padding: 0.15em 0.4em; border-radius: 3px; font-size: 0.9em; font-family: 'SF Mono', 'Menlo', monospace; }
+    .prose-custom pre { background: #f4f4f4; padding: 1.25em; overflow-x: auto; margin: 1.5em 0; font-size: 0.875rem; line-height: 1.6; }
+    .prose-custom pre code { background: none; padding: 0; }
+    .prose-custom hr { border: none; border-top: 1px solid #eee; margin: 2.5em 0; }
+    .toc ul { list-style: none; padding-left: 0; }
+    .toc a { text-decoration: none; color: #666; transition: color 0.2s; }
+    .toc a:hover { color: #0e7490; }
+    html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+    @media print { header, footer, aside, .toc, details { display: none !important; } body { font-size: 12pt; } }
+</style>
+
+</body>
+</html>
