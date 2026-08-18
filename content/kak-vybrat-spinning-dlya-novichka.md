@@ -5,7 +5,7 @@ date: 2026-08-18
 author: Fish Zone
 category: tackle
 tags: спиннинг, выбор, новичок, удилище, тест
-image: /images/cover-spinning-novichku.webp
+image: /images/vybrat-spinning-novichka-polnyy-gid-udilischu-hero.webp
 image_alt: Как выбрать спиннинг для новичка
 ---
 

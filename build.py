@@ -32,6 +32,7 @@ import json
 import shutil
 import argparse
 import os
+import sys
 from pathlib import Path
 from datetime import datetime
 from html import escape
@@ -730,6 +731,22 @@ def create_article(title: str, description: str = "", tags: str = "") -> Path:
     return path
 
 
+def _make_description(body: str, title: str, target: tuple[int, int] = (140, 160)) -> str:
+    """Формирует meta description 140-160 символов из первого абзаца лида."""
+    # Без callout-директив, без markdown-разметки
+    clean = re.sub(r"^:::[a-z]+\s*.*$", "", body, flags=re.MULTILINE)
+    clean = re.sub(r"^:::\s*$", "", clean, flags=re.MULTILINE)
+    clean = re.sub(r"[#*_>`]", "", clean)
+    clean = re.sub(r"\s+", " ", clean).strip()
+    lo, hi = target
+    if len(clean) >= lo:
+        return clean[:hi].rsplit(" ", 1)[0].rstrip(".,;:") + "."
+    # Короткий текст — добиваем заголовком
+    while len(clean) < lo:
+        clean = clean + " " + title
+    return clean[:hi].rsplit(" ", 1)[0].rstrip(".,;:") + "."
+
+
 def generate_article(title: str, tags: str = "", category: str = "tackle", prompt: str = "") -> Path:
     """Генерирует статью через гуманизатор (tools/humanize.py) и сохраняет .md.
 
@@ -798,6 +815,16 @@ def generate_article(title: str, tags: str = "", category: str = "tackle", promp
                 frontmatter = re.sub(r'^category: .*', f'category: {category}', frontmatter, flags=re.MULTILINE)
             else:
                 frontmatter += f'\ncategory: {category}'
+        # Обновляем tags (если переданы)
+        if tags:
+            if re.search(r'^tags: .*', frontmatter, re.MULTILINE):
+                frontmatter = re.sub(r'^tags: .*', f'tags: {tags}', frontmatter, flags=re.MULTILINE)
+            else:
+                frontmatter += f'\ntags: {tags}'
+        # Генерируем description из первого предложения лида (140-160 симв)
+        if not re.search(r'^description: ".+"', frontmatter, re.MULTILINE):
+            desc = _make_description(article_body, title)
+            frontmatter += f'\ndescription: "{desc}"'
         new_content = f"---\n{frontmatter}\n---\n\n{article_body}\n"
         filepath.write_text(new_content, encoding="utf-8")
     else:
