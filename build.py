@@ -568,6 +568,73 @@ def create_article(title: str, description: str = "", tags: str = "") -> Path:
     return path
 
 
+def generate_article(title: str, tags: str = "", category: str = "tackle", prompt: str = "") -> Path:
+    """Генерирует статью через гуманизатор (tools/humanize.py) и сохраняет .md.
+
+    Пайплайн:
+      1. create_article() — создаёт .md с frontmatter
+      2. Отправляет промпт в гуманизатор (CLI, DeepSeek/Gemini fallback)
+      3. Гуманизатор применяет фильтры (детокс AI-клише, запрет тире и т.д.)
+      4. Вставляет тело статьи, обновляет category/tags
+
+    Аргументы:
+        title    — заголовок статьи
+        tags     — теги через запятую
+        category — категория (tackle/fish/technique/lure/rig/season/rating)
+        prompt   — доп. уточнение темы (иначе используется title)
+    """
+    filepath = create_article(title, tags=tags)
+    print(f"   Шаг 1: файл создан")
+
+    # Формируем промпт для генерации под спиннинг-нишу
+    if not prompt:
+        prompt = (
+            f"Напиши статью для спиннинг-блога на тему: {title}. "
+            f"Это информационная SEO-статья для рыболовов-спиннингистов. "
+            f"Аудитория: от новичков до опытных, мужчины 25-55 лет. "
+            f"Структура:\n"
+            f"- Лид-абзац без заголовка (сразу с новой строки)\n"
+            f"- Разделы с заголовками ## H2\n"
+            f"- В конце естественное завершение, без рекламы\n\n"
+            f"Формат: чистый Markdown, без frontmatter (он уже есть), "
+            f"без H1, короткие абзацы по 2-4 предложения, "
+            f"конкретика и практическая польза."
+        )
+
+    print(f"   Шаг 2: отправляю в гуманизатор...")
+    import subprocess
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "humanize.py"), prompt],
+        capture_output=True, text=True, timeout=300,
+    )
+    if result.returncode != 0 or not result.stdout.strip():
+        print(f"❌ Гуманизатор не сработал: {result.stderr[-300:]}")
+        return filepath
+    article_body = result.stdout.strip()
+    print(f"   ✅ Гуманизатор ответил ({len(article_body)} симв)")
+
+    # Читаем файл и вставляем тело после frontmatter
+    raw = filepath.read_text(encoding="utf-8")
+    parts = raw.split("---\n")
+    if len(parts) >= 3:
+        frontmatter = parts[1].strip()
+        # Обновляем category
+        if category:
+            if re.search(r'^category: .*', frontmatter, re.MULTILINE):
+                frontmatter = re.sub(r'^category: .*', f'category: {category}', frontmatter, flags=re.MULTILINE)
+            else:
+                frontmatter += f'\ncategory: {category}'
+        new_content = f"---\n{frontmatter}\n---\n\n{article_body}\n"
+        filepath.write_text(new_content, encoding="utf-8")
+    else:
+        filepath.write_text(raw.rstrip() + "\n\n" + article_body + "\n", encoding="utf-8")
+
+    print(f"\n📝 Статья сгенерирована: {filepath}")
+    print(f"   Тема: {title}")
+    print(f"   Далее: запусти критик → build → deploy")
+    return filepath
+
+
 # ═══════════════════════════════════════════════════════════════════
 # ПРОВЕРКА
 # ═══════════════════════════════════════════════════════════════════
@@ -599,11 +666,19 @@ def main():
     parser = argparse.ArgumentParser(description="Fish Zone Blog Builder")
     parser.add_argument("--check", action="store_true", help="только проверка статей")
     parser.add_argument("--new", metavar="TITLE", help="создать новую статью")
+    parser.add_argument("--generate", metavar="TITLE", help="сгенерировать статью через гуманизатор")
+    parser.add_argument("--category", default="tackle", help="категория для --generate (tackle/fish/technique/lure/rig/season/rating)")
+    parser.add_argument("--tags", default="", help="теги для --generate через запятую")
+    parser.add_argument("--prompt", default="", help="доп. промпт для --generate")
     parser.add_argument("--watch", action="store_true", help="dev-режим слежения")
     args = parser.parse_args()
 
     if args.check:
         sys_exit(check_all())
+        return
+
+    if args.generate:
+        generate_article(args.generate, tags=args.tags, category=args.category, prompt=args.prompt)
         return
 
     if args.new:
