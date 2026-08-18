@@ -307,6 +307,10 @@ def _call_openai(text: str) -> dict:
             {"role": "user", "content": f"Analyze this article for AI markers:\n\n{text}"},
         ],
         "stream": False,
+        # reasoning-модели (deepseek-v4) иначе тратят все токены на рассуждения
+        # и не успевают выдать content. Отключаем, чтобы был чистый JSON.
+        "reasoning": {"effort": "low"},
+        "include_reasoning": False,
     }
 
     last_error = None

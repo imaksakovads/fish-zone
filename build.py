@@ -81,7 +81,7 @@ MD_EXTENSIONS = [
 MD_EXTENSION_CONFIGS = {
     "markdown.extensions.toc": {
         "permalink": False,
-        "baselevel": 2,
+        "baselevel": 1,
         "title": "Содержание",
     },
 }
@@ -356,7 +356,9 @@ def render_callouts(body_md: str):
         m = _CALLOUT_OPEN.match(line.strip())
         if m:
             ctype = m.group(1)
-            custom_title = m.group(2)
+            custom_title = (m.group(2) or "").strip()
+            # Убираем markdown-разметку ** жирного из заголовка
+            custom_title = re.sub(r"^\*\*(.+)\*\*\s*$", r"\1", custom_title)
             # собираем содержимое блока до ":::"
             block_lines: list[str] = []
             i += 1
@@ -374,11 +376,16 @@ def render_callouts(body_md: str):
             inner_html = _md(inner_md, extensions=MD_EXTENSIONS, extension_configs=MD_EXTENSION_CONFIGS)
 
             if ctype == "faq":
-                # FAQ: первая строка — вопрос (жирный или обычный), остальное — ответ
-                first_line = block_lines[0].strip() if block_lines else ""
-                question = re.sub(r"^\*\*(.+)\*\*\s*$", r"\1", first_line)
-                answer_md = "\n".join(block_lines[1:]).strip() if len(block_lines) > 1 else ""
+                # FAQ: заголовок — в открывающей строке (:::faq Вопрос?), либо первая строка блока
+                question = (custom_title or "").strip()
+                if not question and block_lines:
+                    first_line = block_lines[0].strip()
+                    question = re.sub(r"^\*\*(.+)\*\*\s*$", r"\1", first_line)
+                    block_lines = block_lines[1:]
+                answer_md = "\n".join(block_lines).strip()
                 answer_html = _md(answer_md, extensions=MD_EXTENSIONS, extension_configs=MD_EXTENSION_CONFIGS) if answer_md else inner_html
+                if not question:
+                    question = "Вопрос"
                 faq_data.append({"q": question, "a": answer_html})
                 out.append(
                     f'<div class="faq-item border border-gray-200 p-5 mb-4">'
@@ -386,10 +393,16 @@ def render_callouts(body_md: str):
                     f'<div class="prose-custom">{answer_html}</div></div>'
                 )
             elif ctype == "howto":
-                first_line = block_lines[0].strip() if block_lines else ""
-                step_title = re.sub(r"^\*\*(.+)\*\*\s*$", r"\1", first_line)
-                desc_md = "\n".join(block_lines[1:]).strip() if len(block_lines) > 1 else ""
+                # HowTo: заголовок — в открывающей строке (:::howto Название), либо первая строка блока
+                step_title = (custom_title or "").strip()
+                if not step_title and block_lines:
+                    first_line = block_lines[0].strip()
+                    step_title = re.sub(r"^\*\*(.+)\*\*\s*$", r"\1", first_line)
+                    block_lines = block_lines[1:]
+                desc_md = "\n".join(block_lines).strip()
                 desc_html = _md(desc_md, extensions=MD_EXTENSIONS, extension_configs=MD_EXTENSION_CONFIGS) if desc_md else inner_html
+                if not step_title:
+                    step_title = "Шаг"
                 howto_data.append({"name": step_title, "text": desc_html})
                 out.append(
                     f'<div class="howto-step border-l-4 border-water pl-5 mb-4">'
@@ -822,8 +835,11 @@ def generate_article(title: str, tags: str = "", category: str = "tackle", promp
             else:
                 frontmatter += f'\ntags: {tags}'
         # Генерируем description из первого предложения лида (140-160 симв)
-        if not re.search(r'^description: ".+"', frontmatter, re.MULTILINE):
-            desc = _make_description(article_body, title)
+        # Обновляем существующую строку description (даже если она пустая), не дублируем
+        desc = _make_description(article_body, title)
+        if re.search(r'^description: .*', frontmatter, re.MULTILINE):
+            frontmatter = re.sub(r'^description: .*', f'description: "{desc}"', frontmatter, flags=re.MULTILINE)
+        else:
             frontmatter += f'\ndescription: "{desc}"'
         new_content = f"---\n{frontmatter}\n---\n\n{article_body}\n"
         filepath.write_text(new_content, encoding="utf-8")
