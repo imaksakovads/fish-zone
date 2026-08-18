@@ -31,6 +31,8 @@
     <!-- JSON-LD -->
     <script type="application/ld+json">{{jsonld_article}}</script>
     <script type="application/ld+json">{{jsonld_breadcrumbs}}</script>
+    <script type="application/ld+json">{{jsonld_faq}}</script>
+    <script type="application/ld+json">{{jsonld_howto}}</script>
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="{{site_url}}/favicon.svg">
@@ -163,6 +165,9 @@
                     <p class="text-gray-400 mb-6 text-sm">Снасти, приманки, техники и виды рыб — в блоге Fish Zone</p>
                     <a href="{{blog_url}}/index.html" class="inline-block bg-white text-black px-8 py-4 font-display uppercase tracking-widest text-sm hover:bg-offwhite transition">Все статьи</a>
                 </div>
+
+                <!-- Related articles -->
+                {{article_related}}
             </footer>
         </div>
     </div>
@@ -219,9 +224,55 @@
     .toc ul { list-style: none; padding-left: 0; }
     .toc a { text-decoration: none; color: #666; transition: color 0.2s; }
     .toc a:hover { color: #0e7490; }
+
+    /* Callout-блоки */
+    .callout { border-left: 4px solid #0e7490; }
+    .callout-warning { border-left-color: #b45309; background: #fffbeb; }
+    .callout-myth { border-left-color: #7c3aed; background: #f5f3ff; }
+    .callout-experience { border-left-color: #0e7490; background: #f0f9ff; }
+    .callout-secret { border-left-color: #059669; background: #ecfdf5; }
+    .callout-summary { border-left-color: #0a0a0a; background: #f4f4f4; }
+    .callout .prose-custom p:last-child { margin-bottom: 0; }
+
+    /* FAQ */
+    .faq-item h3 { margin-bottom: 0.5em; }
+    .faq-item .prose-custom p:last-child { margin-bottom: 0; }
+
+    /* HowTo */
+    .howto-step h3 { margin-bottom: 0.25em; }
+    .howto-step .prose-custom p:last-child { margin-bottom: 0; }
+
     html { scroll-behavior: smooth; scroll-padding-top: 100px; }
     @media print { header, footer, aside, .toc, details { display: none !important; } body { font-size: 12pt; } }
 </style>
+
+<!-- Sticky ToC: подсветка активного раздела при скролле -->
+<script>
+(function() {
+    var tocLinks = document.querySelectorAll('.toc a[href^="#"]');
+    if (!tocLinks.length) return;
+    var ids = [];
+    tocLinks.forEach(function(a) { ids.push(a.getAttribute('href').slice(1)); });
+
+    function setActive(id) {
+        tocLinks.forEach(function(a) {
+            var active = a.getAttribute('href') === '#' + id;
+            a.style.color = active ? '#0e7490' : '';
+            a.style.fontWeight = active ? '600' : '';
+        });
+    }
+
+    var headings = ids.map(function(id) { return document.getElementById(id); }).filter(Boolean);
+    function onScroll() {
+        var pos = window.scrollY + 120;
+        var current = null;
+        headings.forEach(function(h) { if (h.offsetTop <= pos) current = h.id; });
+        if (current) setActive(current);
+    }
+    window.addEventListener('scroll', onScroll, {passive: true});
+    onScroll();
+})();
+</script>
 
 </body>
 </html>

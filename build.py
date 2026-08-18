@@ -318,7 +318,134 @@ def preprocess_markdown(body_md: str) -> tuple[str, list[str]]:
     return body_md, warnings
 
 
-def build_post(meta: dict, body_md: str, template: str) -> str:
+# ═══════════════════════════════════════════════════════════════════
+# CALLOUT-ДИРЕКТИВЫ (:::блок) И FAQ/HowTo
+# ═══════════════════════════════════════════════════════════════════
+
+# Типы callout-блоков и их классы/заголовки
+_CALLOUT_TYPES = {
+    "tip": ("callout-tip", "Совет"),
+    "secret": ("callout-secret", "Секрет"),
+    "experience": ("callout-experience", "Опыт автора"),
+    "warning": ("callout-warning", "Частая ошибка"),
+    "myth": ("callout-myth", "Миф и правда"),
+    "summary": ("callout-summary", "Вывод за 30 секунд"),
+}
+
+# Директива: строки вида ":::tip", ":::tip Заголовок" ... ":::"
+_CALLOUT_OPEN = re.compile(r"^:::\s*([a-z]+)(?:\s+(.+))?\s*$")
+
+
+def render_callouts(body_md: str):
+    """Преобразует callout-директивы (:::) в HTML-блоки и собирает FAQ/HowTo данные.
+
+    Возвращает (обработанный_markdown, faq_data, howto_data).
+    FAQ-директива: ":::faq Вопрос?" ... ответ ... ":::"
+    HowTo-директива: ":::howto Шаг" ... описание ... ":::"
+    """
+    from markdown import markdown as _md
+    lines = body_md.split("\n")
+    out: list[str] = []
+    i = 0
+    faq_data: list[dict] = []
+    howto_data: list[dict] = []
+
+    while i < len(lines):
+        line = lines[i]
+        m = _CALLOUT_OPEN.match(line.strip())
+        if m:
+            ctype = m.group(1)
+            custom_title = m.group(2)
+            # собираем содержимое блока до ":::"
+            block_lines: list[str] = []
+            i += 1
+            while i < len(lines) and lines[i].strip() != ":::": 
+                block_lines.append(lines[i])
+                i += 1
+            # i теперь на закрывающей ":::"
+            i += 1  # пропускаем ":::"
+
+            inner_md = "\n".join(block_lines).strip()
+            if not inner_md:
+                continue
+
+            # Преобразуем внутренний markdown
+            inner_html = _md(inner_md, extensions=MD_EXTENSIONS, extension_configs=MD_EXTENSION_CONFIGS)
+
+            if ctype == "faq":
+                # FAQ: первая строка — вопрос (жирный или обычный), остальное — ответ
+                first_line = block_lines[0].strip() if block_lines else ""
+                question = re.sub(r"^\*\*(.+)\*\*\s*$", r"\1", first_line)
+                answer_md = "\n".join(block_lines[1:]).strip() if len(block_lines) > 1 else ""
+                answer_html = _md(answer_md, extensions=MD_EXTENSIONS, extension_configs=MD_EXTENSION_CONFIGS) if answer_md else inner_html
+                faq_data.append({"q": question, "a": answer_html})
+                out.append(
+                    f'<div class="faq-item border border-gray-200 p-5 mb-4">'
+                    f'<h3 class="font-display text-lg uppercase mb-2">{escape(question)}</h3>'
+                    f'<div class="prose-custom">{answer_html}</div></div>'
+                )
+            elif ctype == "howto":
+                first_line = block_lines[0].strip() if block_lines else ""
+                step_title = re.sub(r"^\*\*(.+)\*\*\s*$", r"\1", first_line)
+                desc_md = "\n".join(block_lines[1:]).strip() if len(block_lines) > 1 else ""
+                desc_html = _md(desc_md, extensions=MD_EXTENSIONS, extension_configs=MD_EXTENSION_CONFIGS) if desc_md else inner_html
+                howto_data.append({"name": step_title, "text": desc_html})
+                out.append(
+                    f'<div class="howto-step border-l-4 border-water pl-5 mb-4">'
+                    f'<h3 class="font-display text-lg uppercase mb-1">{escape(step_title)}</h3>'
+                    f'<div class="prose-custom">{desc_html}</div></div>'
+                )
+            else:
+                # Обычный callout
+                cls, default_title = _CALLOUT_TYPES.get(ctype, ("callout-tip", "Совет"))
+                title = custom_title or default_title
+                out.append(
+                    f'<aside class="callout {cls} border border-gray-200 bg-gray-50/50 p-5 my-5">'
+                    f'<p class="font-display text-xs uppercase tracking-widest text-water mb-2">{escape(title)}</p>'
+                    f'<div class="prose-custom">{inner_html}</div></aside>'
+                )
+            continue
+        out.append(line)
+        i += 1
+
+    return "\n".join(out), faq_data, howto_data
+
+
+def build_jsonld_faq(faq_data: list[dict]) -> str:
+    if not faq_data:
+        return ""
+    ld = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": item["q"],
+                "acceptedAnswer": {"@type": "Answer", "text": re.sub(r"<[^>]+>", " ", item["a"]).strip()},
+            }
+            for item in faq_data
+        ],
+    }
+    return json.dumps(ld, ensure_ascii=False, indent=2)
+
+
+def build_jsonld_howto(howto_data: list[dict], meta: dict) -> str:
+    if not howto_data:
+        return ""
+    ld = {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": meta.get("title", ""),
+        "step": [
+            {"@type": "HowToStep", "position": i + 1, "name": item["name"],
+             "text": re.sub(r"<[^>]+>", " ", item["text"]).strip()}
+            for i, item in enumerate(howto_data)
+        ],
+    }
+    return json.dumps(ld, ensure_ascii=False, indent=2)
+
+
+def build_post(meta: dict, body_md: str, template: str, related_posts: list[dict] | None = None) -> str:
     from markdown import markdown as md_convert
 
     slug = meta.get("slug") or slugify(meta["title"])
@@ -333,6 +460,8 @@ def build_post(meta: dict, body_md: str, template: str) -> str:
     if md_warnings:
         meta.setdefault("_warnings", []).extend(md_warnings)
 
+    # Callout-директивы (:::) и FAQ/HowTo → HTML + сбор JSON-LD
+    body_md, faq_data, howto_data = render_callouts(body_md)
     body_html = md_convert(body_md, extensions=MD_EXTENSIONS, extension_configs=MD_EXTENSION_CONFIGS)
 
     toc_html = build_toc_html(extract_headings(body_html))
@@ -353,6 +482,27 @@ def build_post(meta: dict, body_md: str, template: str) -> str:
 
     jsonld_article = build_jsonld_article(meta, url)
     jsonld_bc = build_jsonld_breadcrumbs(meta, url)
+    jsonld_faq = build_jsonld_faq(faq_data)
+    jsonld_howto = build_jsonld_howto(howto_data, meta)
+
+    # Related-статьи («С этой статьёй читают»)
+    related_html = ""
+    if related_posts:
+        cards = []
+        for rp in related_posts[:4]:
+            rslug = rp.get("slug") or slugify(rp["title"])
+            rurl = f"{BLOG_URL}/{rslug}.html"
+            rimg = rp.get("image", "")
+            if rimg.startswith("/"):
+                rimg = SITE_URL + rimg
+            rdate = format_date(rp.get("date", ""))
+            cards.append(
+                f'<a href="{rurl}" class="group border border-gray-200 hover:border-water transition flex items-center gap-4 p-3">'
+                f'<img src="{rimg}" alt="{escape(rp.get("image_alt", rp.get("title","")))}" class="w-20 h-14 object-cover" loading="lazy" width="80" height="56">'
+                f'<div><p class="font-mono text-[10px] text-gray-400 mb-1">{rdate}</p>'
+                f'<h3 class="font-display text-sm uppercase leading-tight group-hover:text-water transition">{escape(rp.get("title",""))}</h3></div></a>'
+            )
+        related_html = '<section class="mt-12"><h2 class="font-display text-2xl uppercase mb-4">С этой статьёй читают</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-4">' + "".join(cards) + '</div></section>'
 
     return render(
         template,
@@ -363,6 +513,8 @@ def build_post(meta: dict, body_md: str, template: str) -> str:
         og_image_alt=meta.get("image_alt", meta.get("title", "")),
         jsonld_article=jsonld_article,
         jsonld_breadcrumbs=jsonld_bc,
+        jsonld_faq=jsonld_faq,
+        jsonld_howto=jsonld_howto,
         article_date=date_fmt,
         article_date_iso=date_iso,
         article_author=meta.get("author", AUTHOR_DEFAULT),
@@ -372,6 +524,7 @@ def build_post(meta: dict, body_md: str, template: str) -> str:
         article_read_time=str(read_min),
         article_toc=toc_html,
         article_body=body_html,
+        article_related=related_html,
         site_url=SITE_URL,
         blog_url=BLOG_URL,
         site_name=SITE_NAME,
@@ -456,6 +609,15 @@ def load_articles() -> list[tuple[dict, str]]:
     return articles
 
 
+def pick_related(current: dict, articles: list[tuple[dict, str]], limit: int = 4) -> list[dict]:
+    """Подбирает related-статьи: сначала та же категория, потом другие, но не текущую."""
+    cur_cat = current.get("category", "")
+    cur_slug = current.get("slug")
+    same_cat = [m for m, _ in articles if m.get("category") == cur_cat and m.get("slug") != cur_slug]
+    others = [m for m, _ in articles if m.get("category") != cur_cat and m.get("slug") != cur_slug]
+    return (same_cat + others)[:limit]
+
+
 def build_all(incremental: bool = False):
     try:
         import markdown  # noqa: F401
@@ -500,7 +662,7 @@ def build_all(incremental: bool = False):
             if src_md and src_md.exists() and src_md.stat().st_mtime <= output_path.stat().st_mtime:
                 print(f"  ➖ {slug}.html — без изменений")
                 continue
-        html = build_post(meta, body, post_tpl)
+        html = build_post(meta, body, post_tpl, related_posts=pick_related(meta, articles))
         output_path.write_text(html, encoding="utf-8")
         print(f"  ✅ {slug}.html — «{meta['title'][:60]}»")
         built_count += 1
@@ -596,7 +758,19 @@ def generate_article(title: str, tags: str = "", category: str = "tackle", promp
             f"- Лид-абзац без заголовка (сразу с новой строки)\n"
             f"- Разделы с заголовками ## H2\n"
             f"- В конце естественное завершение, без рекламы\n\n"
-            f"Формат: чистый Markdown, без frontmatter (он уже есть), "
+            f"Обязательно включи в текст эти блоки (используй callout-директивы):\n"
+            f"1. :::summary — вывод за 30 секунд (в начале, сразу после лида)\n"
+            f"2. :::experience — блок «Опыт автора» (в середине)\n"
+            f"3. :::warning — блок «Частая ошибка» (в середине)\n"
+            f"4. :::myth — блок «Миф и правда» (в середине)\n"
+            f"5. :::secret — блок «Секрет» (в середине)\n"
+            f"6. :::tip — блок «Совет» (в середине)\n"
+            f"7. :::howto **Название шага** ... описание — минимум 2-3 шага HowTo\n"
+            f"8. В конце — раздел ## FAQ с 2-3 блоками :::faq **Вопрос?** ответ...\n\n"
+            f"Формат директив: блок открывается строкой :::тип, содержимое, "
+            f"закрывается строкой ::: (три двоеточия). Для howto/faq первая строка "
+            f"внутри — **жирный заголовок**, остальное — описание.\n\n"
+            f"Остальной текст: чистый Markdown, без frontmatter (он уже есть), "
             f"без H1, короткие абзацы по 2-4 предложения, "
             f"конкретика и практическая польза."
         )
