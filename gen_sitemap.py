@@ -25,7 +25,12 @@ def build_sitemap() -> str:
   </url>""")
 
     if OUTPUT_DIR.exists():
-        articles = sorted(f.stem for f in OUTPUT_DIR.glob("*.html") if f.stem != "index")
+        # Исключаем index, верификационные файлы (yandex_*, google*) и служебные
+        skip_prefixes = ("index", "yandex_", "google", "favicon")
+        articles = sorted(
+            f.stem for f in OUTPUT_DIR.glob("*.html")
+            if f.stem != "index" and not f.stem.startswith(("yandex_", "google"))
+        )
         for slug in articles:
             fpath = OUTPUT_DIR / f"{slug}.html"
             mtime = date.fromtimestamp(fpath.stat().st_mtime).isoformat()

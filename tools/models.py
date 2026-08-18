@@ -27,7 +27,7 @@ class HumanizeRequest(BaseModel):
     """Входной запрос на обработку текста."""
     content: str = Field(..., min_length=1, description="Текст для очистки и переписывания")
     provider: Optional[str] = Field(default=None, description="Явный выбор провайдера: deepseek | gemini | local")
-    max_tokens: int = Field(default=1024, ge=64, le=4096, description="Макс. токенов на ответ")
+    max_tokens: int = Field(default=1024, ge=64, le=12000, description="Макс. токенов на ответ")
 
 
 class HumanizeResponse(BaseModel):
@@ -73,10 +73,32 @@ class ProviderResult:
 
 
 # ═══════════════════════════════════════════════════════════════════
-# Провайдеры по умолчанию (загружаются из .env при старте)
+# Провайдеры
 # ═══════════════════════════════════════════════════════════════════
 
+def _nous_token() -> str:
+    """Читает access_token для Nous Portal из auth.json Hermes (не хардкодит)."""
+    import json
+    from pathlib import Path
+    auth = Path.home() / ".hermes/profiles/fish/auth.json"
+    try:
+        data = json.loads(auth.read_text(encoding="utf-8"))
+        pool = data.get("credential_pool", {}).get("nous", [])
+        if pool:
+            return pool[0].get("access_token", "")
+    except Exception:
+        pass
+    return ""
+
 DEFAULT_PROVIDERS: list[ProviderConfig] = [
+    ProviderConfig(
+        name="nous",
+        api_url="https://inference-api.nousresearch.com/v1/chat/completions",
+        model="deepseek/deepseek-v4-flash-0731",
+        api_key=_nous_token(),
+        connect_timeout=10.0,
+        read_timeout=180.0,
+    ),
     ProviderConfig(
         name="deepseek",
         api_url="https://api.deepseek.com/v1/chat/completions",
@@ -110,7 +132,7 @@ DEFAULT_PROVIDERS: list[ProviderConfig] = [
 
 CHUNK_LIMIT_TOKENS = 2000
 CHUNK_SIZE_CHARS = 1500
-PROVIDER_PRIORITY: list[str] = ["gemini", "deepseek", "local"]
+PROVIDER_PRIORITY: list[str] = ["nous", "gemini", "deepseek", "local"]
 MAX_CONCURRENT_REQUESTS = 2
 
 # ═══════════════════════════════════════════════════════════════════

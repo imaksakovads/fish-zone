@@ -44,7 +44,7 @@ else:
     print("ERROR: Set ANTHROPIC_API_KEY or DEEPSEEK_API_KEY", file=sys.stderr)
     sys.exit(3)
 
-TIMEOUT = 120  # seconds
+TIMEOUT = 300  # seconds
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # seconds
 
@@ -103,7 +103,7 @@ CATEGORIES = [
     },
 ]
 
-SYSTEM_PROMPT = """You are a strict AI-marker critic for Russian-language beauty blog articles.
+SYSTEM_PROMPT = """You are a strict AI-marker critic for Russian-language spinning-fishing blog articles.
 
 Analyze the article text for the 6 categories of AI-generated markers listed below.
 For each category, return PASS if clean or FAIL if markers are found.
@@ -114,6 +114,14 @@ CRITICAL:
 - Be conservative: if unsure, mark PASS (false negative > false positive)
 - Do NOT suggest rewriting — only identify problems
 - Output valid JSON only, no markdown fences, no extra text
+
+IMPORTANT — INTENTIONAL SEO BLOCKS (do NOT flag as AI markers):
+- Callout directives: lines starting with :::tip, :::warning, :::myth, :::secret,
+  :::experience, :::summary, :::faq, :::howto. These are deliberate structured
+  content blocks of this blog, not AI artifacts. The :::summary block (30-second
+  summary near the top) is an intentional SEO/BLUF feature — do NOT classify it
+  as fractal_summaries. The :::faq blocks and :::howto steps are intentional.
+- Only flag genuine AI patterns in the normal prose paragraphs.
 
 JSON schema:
 {

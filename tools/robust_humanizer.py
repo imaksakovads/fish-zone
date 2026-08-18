@@ -614,7 +614,7 @@ class RobustHumanizer:
 
     def _build_payload(self, text: str, provider: str, max_tokens: int) -> dict:
         """Формирует тело запроса в зависимости от провайдера."""
-        if provider in ("deepseek", "local"):
+        if provider in ("nous", "deepseek", "local"):
             return {
                 "model": self._providers[provider].model,
                 "messages": [
@@ -624,6 +624,9 @@ class RobustHumanizer:
                 "max_tokens": max_tokens,
                 "stream": True,
                 "temperature": 0.4,
+                # reasoning-модели иначе тратят токены на рассуждения
+                "reasoning": {"effort": "low"},
+                "include_reasoning": False,
             }
         # Gemini
         return {

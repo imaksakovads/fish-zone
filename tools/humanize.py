@@ -16,6 +16,7 @@ import argparse
 import asyncio
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -86,6 +87,10 @@ def main() -> int:
     if not result:
         print("❌ Пустой результат (нет ключей или ошибка провайдеров)", file=sys.stderr)
         return 1
+
+    # Очистка служебных заметок модели вида «(правка пунктуации)», «(исправлено)» и т.п.
+    result = re.sub(r"\s*\([^)]*(?:правк|исправ|перевод|очистк|замен|уточн|фикс|ред)\w*[^)]*\)\s*", " ", result)
+    result = re.sub(r"[ \t]{2,}", " ", result).strip()
 
     if args.out:
         Path(args.out).write_text(result.strip() + "\n", encoding="utf-8")
