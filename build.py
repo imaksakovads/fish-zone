@@ -370,14 +370,18 @@ def render_callouts(body_md: str):
             custom_title = (m.group(2) or "").strip()
             # Убираем markdown-разметку ** жирного из заголовка
             custom_title = re.sub(r"^\*\*(.+)\*\*\s*$", r"\1", custom_title)
-            # собираем содержимое блока до ":::"
+            # собираем содержимое блока до ":::" или до новой открывающей директивы :::тип
             block_lines: list[str] = []
             i += 1
-            while i < len(lines) and lines[i].strip() != ":::": 
+            while i < len(lines):
+                s = lines[i].strip()
+                if s == ":::":
+                    i += 1  # съедаем закрывающую ":::"
+                    break
+                if _CALLOUT_OPEN.match(s):
+                    break  # новая директива — закрываем текущий блок без ":::"
                 block_lines.append(lines[i])
                 i += 1
-            # i теперь на закрывающей ":::"
-            i += 1  # пропускаем ":::"
 
             inner_md = "\n".join(block_lines).strip()
             if not inner_md:
@@ -482,8 +486,10 @@ def build_article_sections(body_html: str):
     Определяет уровень секций автоматически: H2, если есть; иначе H3
     (но не подзаголовки howto с class="sub"). Каждая секция получает номер 01, 02…
     """
-    # Уровень секций: H2 при наличии, иначе H3
-    has_h2 = bool(re.search(r'<h2\b', body_html))
+    # Уровень секций: H2 если их >= 2 (реальные разделы), иначе H3
+    # (одиночный H2 типа "## FAQ" не является уровнем секций)
+    h2_count = len(re.findall(r'<h2\b', body_html))
+    has_h2 = h2_count >= 2
     sec_tag = 'h2' if has_h2 else 'h3'
     # Убираем howto-подзаголовки (class="sub") из рассмотрения, если работаем с H3
     if not has_h2:
