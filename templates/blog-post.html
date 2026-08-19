@@ -1,278 +1,325 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="index, follow">
-    <link rel="alternate" hreflang="ru" href="{{canonical}}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index, follow">
+<title>{{title}} | FishZone</title>
+<meta name="description" content="{{description}}">
+<link rel="canonical" href="{{canonical}}">
+<!-- Open Graph -->
+<meta property="og:locale" content="ru_RU">
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{canonical}}">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:image" content="{{og_image}}">
+<meta property="og:image:alt" content="{{og_image_alt}}">
+<meta property="og:site_name" content="{{site_name}}">
+<meta property="article:published_time" content="{{article_date_iso}}">
+<meta property="article:author" content="{{article_author}}">
+<!-- JSON-LD -->
+<script type="application/ld+json">{{jsonld_article}}</script>
+<script type="application/ld+json">{{jsonld_breadcrumbs}}</script>
+<script type="application/ld+json">{{jsonld_faq}}</script>
+<script type="application/ld+json">{{jsonld_howto}}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111715500', 'ym');
+    ym(111715500, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/111715500" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg: oklch(0.984 0.003 247.9); --surface: oklch(1.000 0.000 89.9);
+  --fg: oklch(0.208 0.040 265.8); --muted: oklch(0.446 0.037 257.3);
+  --border: oklch(0.929 0.013 255.5); --accent: oklch(0.520 0.094 223.1);
+  --accent-strong: oklch(0.450 0.077 224.3); --accent-soft: oklch(0.953 0.029 221.7);
+  --deep: oklch(0.310 0.060 224.9); --deep-2: oklch(0.260 0.052 225.5);
+  --deep-3: oklch(0.390 0.070 223.5); --on-deep: oklch(0.980 0.004 250.0);
+  --on-deep-muted: oklch(0.780 0.030 226.0); --danger: oklch(0.577 0.245 27.3);
+  --font-display: "Oswald","Arial Narrow",sans-serif; --font-body: "Manrope",system-ui,sans-serif;
+  --font-mono: ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --radius: 18px; --shadow: 0 1px 2px oklch(0.208 0.040 265.8/0.04), 0 8px 24px oklch(0.208 0.040 265.8/0.06);
+  --maxw: 1180px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{font-family:var(--font-body);background:var(--bg);color:var(--fg);line-height:1.7;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img{display:block;max-width:100%}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:var(--accent-strong)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+::selection{background:var(--accent);color:#fff}
 
-    <title>{{title}} | Fish Zone</title>
-    <meta name="description" content="{{description}}">
-    <link rel="canonical" href="{{canonical}}">
+/* NAV */
+.nav{position:sticky;top:0;z-index:50;background:oklch(0.984 0.003 247.9/0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:600;font-size:21px;letter-spacing:0.04em;text-transform:uppercase;color:var(--fg)}
+.brand-mark{width:34px;height:34px;border-radius:10px;flex:none;background:linear-gradient(160deg,var(--deep-3),var(--deep));display:grid;place-items:center}
+.brand-mark svg{width:19px;height:19px}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-family:var(--font-display);font-size:13px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);padding:6px 2px;position:relative}
+.nav-links a:hover{color:var(--accent-strong)}
+.nav-links a.active{color:var(--accent-strong)}
+.nav-links a.active::after{content:"";position:absolute;left:2px;right:2px;bottom:0;height:2px;background:var(--accent);border-radius:2px}
+.nav-cta{font-family:var(--font-display);font-size:13px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;background:var(--accent);color:#fff;padding:13px 22px;min-height:44px;border-radius:10px;display:inline-flex;align-items:center;gap:8px;transition:background 0.2s ease}
+.nav-cta:hover{background:var(--accent-strong);color:#fff}
+.nav-cta svg{width:14px;height:14px}
+.burger{display:none}
 
-    <!-- Open Graph -->
-    <meta property="og:locale" content="ru_RU">
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="{{canonical}}">
-    <meta property="og:title" content="{{title}}">
-    <meta property="og:description" content="{{description}}">
-    <meta property="og:image" content="{{og_image}}">
-    <meta property="og:image:alt" content="{{og_image_alt}}">
-    <meta property="og:site_name" content="{{site_name}}">
-    <meta property="article:published_time" content="{{article_date_iso}}">
-    <meta property="article:author" content="{{article_author}}">
+/* ARTICLE LAYOUT */
+.article-wrap{max-width:840px;margin:0 auto;padding:64px 24px 72px}
+.article-head{margin-bottom:40px}
+.article-crumbs{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-bottom:22px}
+.article-crumbs a{color:var(--accent)}
+.article-crumbs span{color:var(--border)}
+.article-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-family:var(--font-mono);font-size:12.5px;color:var(--muted);margin-bottom:18px}
+.article-meta .pill{font-family:var(--font-display);font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent-strong);background:var(--accent-soft);border-radius:999px;padding:4px 12px}
+.article-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--border)}
+.article-head h1{font-family:var(--font-display);font-weight:600;font-size:clamp(34px,4.5vw,52px);line-height:1.06;letter-spacing:-0.01em;text-transform:uppercase;margin-bottom:18px}
+.article-deck{font-size:17px;line-height:1.65;color:var(--muted);max-width:60ch}
+.article-hero{border-radius:var(--radius);overflow:hidden;margin-bottom:44px;border:1px solid var(--border)}
+.article-hero img{width:100%;height:auto;display:block}
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{title}}">
-    <meta name="twitter:description" content="{{description}}">
-    <meta name="twitter:image" content="{{og_image}}">
+/* TOC */
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-bottom:40px}
+.toc h2{font-family:var(--font-display);font-size:13px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--fg);margin-bottom:14px}
+.toc ul{list-style:none;display:grid;gap:8px}
+.toc a{font-size:14.5px;color:var(--muted)}
+.toc a:hover{color:var(--accent-strong)}
+.toc .active a{color:var(--accent-strong);font-weight:600}
 
-    <!-- JSON-LD -->
-    <script type="application/ld+json">{{jsonld_article}}</script>
-    <script type="application/ld+json">{{jsonld_breadcrumbs}}</script>
-    <script type="application/ld+json">{{jsonld_faq}}</script>
-    <script type="application/ld+json">{{jsonld_howto}}</script>
+/* PROSE */
+.prose{font-size:16.5px;line-height:1.75;color:var(--fg)}
+.prose h2{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,3vw,30px);line-height:1.15;letter-spacing:-0.005em;text-transform:uppercase;margin:48px 0 18px;padding-top:8px;border-top:1px solid var(--border)}
+.prose h3{font-family:var(--font-display);font-weight:600;font-size:20px;line-height:1.2;text-transform:uppercase;margin:34px 0 12px}
+.prose h4{font-family:var(--font-display);font-weight:500;font-size:17px;text-transform:uppercase;margin:26px 0 10px}
+.prose p{margin-bottom:18px}
+.prose > p:first-of-type{font-size:18.5px;line-height:1.7;color:#334155}
+.prose strong{font-weight:600;color:var(--fg)}
+.prose a{color:var(--accent);text-decoration:underline;text-decoration-color:oklch(0.85 0.05 225/0.5);text-underline-offset:3px}
+.prose a:hover{text-decoration-color:var(--accent)}
+.prose ul{margin:0 0 18px;padding-left:0;list-style:none}
+.prose ol{margin:0 0 18px;padding-left:22px}
+.prose li{margin-bottom:8px}
+.prose ul li{position:relative;padding-left:20px}
+.prose ul li::before{content:"▸";position:absolute;left:0;top:0;color:var(--accent);font-size:13px}
+.prose blockquote{border-left:3px solid var(--accent);background:var(--accent-soft);padding:18px 22px;margin:22px 0;border-radius:0 12px 12px 0;color:#1e293b}
+.prose img{width:100%;height:auto;border-radius:12px;border:1px solid var(--border);margin:24px 0}
+.prose table{width:100%;border-collapse:collapse;margin:22px 0;font-size:14.5px;display:block;overflow-x:auto}
+.prose th{background:var(--accent-soft);color:var(--fg);font-family:var(--font-display);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;padding:11px 14px;text-align:left;border:1px solid var(--border)}
+.prose td{padding:11px 14px;border:1px solid var(--border);vertical-align:top}
+.prose tr:nth-child(even) td{background:oklch(0.98 0.002 247)}
+.prose code{background:var(--accent-soft);padding:2px 7px;border-radius:5px;font-size:0.9em;font-family:var(--font-mono)}
+.prose hr{border:none;border-top:1px solid var(--border);margin:38px 0}
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="{{site_url}}/favicon.svg">
+/* CALLOUTS */
+.callout{border-left:4px solid var(--accent);border-radius:0 14px 14px 0;padding:20px 24px;margin:26px 0;background:var(--surface);border:1px solid var(--border);border-left-width:4px}
+.callout>p:first-child{font-family:var(--font-display);font-size:12px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent-strong);margin-bottom:10px}
+.callout .prose p:last-child{margin-bottom:0}
+.callout-warning{border-left-color:#b45309;background:#fffbeb}
+.callout-myth{border-left-color:#7c3aed;background:#f5f3ff}
+.callout-experience{border-left-color:var(--accent);background:var(--accent-soft)}
+.callout-secret{border-left-color:#059669;background:#ecfdf5}
+.callout-summary{border-left-color:var(--deep);background:var(--surface)}
+.callout-summary>p:first-child{color:var(--deep)}
 
-    <!-- Tailwind + Fonts -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+/* FAQ / HOWTO */
+.faq-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px;margin-bottom:14px}
+.faq-item h3{font-family:var(--font-display);font-size:17px;font-weight:600;text-transform:uppercase;margin-bottom:10px}
+.faq-item .prose p:last-child{margin-bottom:0}
+.howto-step{border-left:4px solid var(--accent);padding:4px 0 4px 22px;margin-bottom:20px}
+.howto-step h3{font-family:var(--font-display);font-size:17px;font-weight:600;text-transform:uppercase;margin-bottom:8px;color:var(--accent-strong)}
+.howto-step .prose p:last-child{margin-bottom:0}
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Manrope', 'sans-serif'],
-                        display: ['Oswald', 'sans-serif'],
-                    },
-                    colors: {
-                        black: '#0a0a0a',
-                        water: '#0e7490',
-                        offwhite: '#f4f4f4',
-                    }
-                }
-            }
-        }
-    </script>
+/* SHARE + RELATED */
+.article-foot{margin-top:56px;padding-top:30px;border-top:1px solid var(--border)}
+.share{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:36px}
+.share .lbl{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.share a{font-family:var(--font-display);font-size:12.5px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;border:1px solid var(--border);border-radius:10px;padding:10px 18px;color:var(--fg);transition:all 0.18s ease}
+.share a:hover{border-color:var(--accent);color:var(--accent-strong)}
+.related{margin-top:8px}
+.related h2{font-family:var(--font-display);font-size:22px;font-weight:600;text-transform:uppercase;margin-bottom:22px}
+.related-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.related-card{display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;transition:transform 0.2s ease, box-shadow 0.2s ease}
+.related-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:oklch(0.85 0.03 225)}
+.related-card img{width:96px;height:66px;object-fit:cover;border-radius:10px;flex:none}
+.related-card .rc-date{font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-bottom:5px}
+.related-card h3{font-family:var(--font-display);font-size:14.5px;font-weight:600;line-height:1.2;text-transform:uppercase}
+.related-card h3 a{color:var(--fg)}
+.related-card h3 a:hover{color:var(--accent-strong)}
 
-    <!-- Yandex.Metrika counter -->
-    <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111715500', 'ym');
+/* FOOTER */
+.footer{border-top:1px solid var(--border);padding:52px 0 40px}
+.footer-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.footer .brand{font-size:19px}
+.footer-desc{max-width:34ch;color:var(--muted);font-size:13.5px;margin-top:12px}
+.footer-col h4{font-family:var(--font-display);font-size:12px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--fg);margin-bottom:14px}
+.footer-col a{display:block;color:var(--muted);font-size:14px;padding:4px 0}
+.footer-col a:hover{color:var(--accent-strong)}
+.footer-bottom{margin-top:40px;padding-top:22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--font-mono);font-size:12px;color:var(--muted)}
 
-        ym(111715500, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/111715500" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
+@media (max-width: 980px){
+  .related-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .burger{display:grid;place-items:center;width:44px;height:44px;border-radius:10px;border:1px solid var(--border);background:var(--surface);cursor:pointer}
+  .nav-links.open{display:flex;flex-direction:column;align-items:flex-start;gap:6px;position:absolute;top:68px;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);padding:18px 24px 22px;box-shadow:var(--shadow)}
+  .nav-links.open a{padding:10px 0}
+}
+@media (max-width: 640px){
+  .article-wrap{padding:40px 20px 56px}
+  .article-head h1{font-size:32px}
+  .prose table{font-size:13px}
+}
+</style>
 </head>
-<body class="antialiased bg-white text-black">
+<body>
 
-<!-- ===== HEADER ===== -->
-<header class="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
-    <div class="max-w-[1600px] mx-auto flex justify-between items-center px-6 py-4">
-        <a href="{{site_url}}" class="font-display font-bold text-2xl tracking-tighter uppercase">
-            Fish<span class="text-water">Zone</span>
-        </a>
-        <nav class="flex gap-6 items-center">
-            <a href="{{blog_url}}/index.html" class="text-sm uppercase tracking-widest hover:text-water transition border-b border-black">Блог</a>
-            <a href="{{blog_url}}/?cat=tackle" class="text-sm uppercase tracking-widest hover:text-water transition hidden md:inline">Снасти</a>
-            <a href="{{blog_url}}/?cat=technique" class="text-sm uppercase tracking-widest hover:text-water transition hidden md:inline">Техники</a>
-        </nav>
-    </div>
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="{{site_url}}" aria-label="FishZone — на главную">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V6"/><path d="M12 6C7 6 4 8.5 3.5 11c.5 2.5 3.5 5 8.5 5s8-2.5 8.5-5C20 8.5 17 6 12 6z"/><path d="M10.5 6.5c.5-.7 1.4-1.2 2.6-1.4.5 1 .2 1.9-.6 2.4"/></svg>
+      </span>
+      FishZone
+    </a>
+    <nav class="nav-links" id="navLinks" aria-label="Основная навигация">
+      <a href="{{blog_url}}/index.html" class="active">Статьи</a>
+      <a href="{{blog_url}}/index.html#categories">Категории</a>
+      <a href="{{blog_url}}/index.html#digest">Дайджест</a>
+    </nav>
+    <a class="nav-cta" href="{{blog_url}}/index.html#digest">Подписаться</a>
+    <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="navLinks">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
 </header>
 
-<!-- ===== BREADCRUMBS ===== -->
-<nav class="pt-24 pb-4 px-6 max-w-[1600px] mx-auto" aria-label="Хлебные крошки">
-    <ol class="flex flex-wrap items-center gap-2 text-xs font-mono text-gray-400">
-        <li><a href="{{site_url}}" class="hover:text-black transition">Главная</a></li>
-        <li><span class="text-gray-300">/</span></li>
-        <li><a href="{{blog_url}}/index.html" class="hover:text-black transition">Блог</a></li>
-        <li><span class="text-gray-300">/</span></li>
-        <li><span class="text-black">{{title}}</span></li>
-    </ol>
-</nav>
+<main>
+  <article class="article-wrap">
+    <header class="article-head">
+      <nav class="article-crumbs" aria-label="Хлебные крошки">
+        <a href="{{site_url}}">Главная</a><span>/</span>
+        <a href="{{blog_url}}/index.html">Блог</a><span>/</span>
+        <span>{{title}}</span>
+      </nav>
+      <div class="article-meta">
+        <span class="pill">{{article_category}}</span>
+        <span class="dot"></span>
+        <time datetime="{{article_date_iso}}">{{article_date}}</time>
+        <span class="dot"></span>
+        <span>{{article_read_time}} мин чтения</span>
+      </div>
+      <h1>{{title}}</h1>
+      <p class="article-deck">{{description}}</p>
+    </header>
 
-<!-- ===== ARTICLE ===== -->
-<main class="max-w-[1600px] mx-auto px-6 pb-20">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
+    <figure class="article-hero">
+      <img src="{{og_image}}" alt="{{og_image_alt}}" width="1200" height="675" loading="eager">
+    </figure>
 
-        <!-- Sidebar -->
-        <aside class="hidden lg:block lg:col-span-3">
-            <div class="sticky top-28">
-                <div class="mb-8 p-6 border border-gray-200">
-                    <p class="font-display text-sm uppercase tracking-widest mb-1">Рубрика</p>
-                    <p class="text-lg font-display uppercase text-water">{{article_category}}</p>
-                </div>
-                {{article_toc}}
-                <div class="flex flex-wrap gap-2 mt-6">
-                    {{article_tags_html}}
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main content -->
-        <div class="lg:col-span-9">
-            <header class="mb-10">
-                <div class="flex items-center gap-4 mb-4">
-                    <time datetime="{{article_date_iso}}" class="font-mono text-xs text-gray-400 uppercase">{{article_date}}</time>
-                    <span class="text-gray-300">·</span>
-                    <span class="font-mono text-xs text-gray-400">{{article_read_time}} мин чтения</span>
-                </div>
-                <h1 class="font-display text-4xl md:text-5xl lg:text-6xl uppercase leading-none mb-6">{{title}}</h1>
-                <p class="text-lg text-gray-600 leading-relaxed max-w-2xl">{{description}}</p>
-            </header>
-
-            <!-- Cover image -->
-            <figure class="mb-12 border border-gray-200 overflow-hidden">
-                <img src="{{og_image}}" alt="{{og_image_alt}}" width="1200" height="675" loading="eager" class="w-full h-auto object-cover">
-                <figcaption class="p-4 text-xs text-gray-400 font-mono">{{og_image_alt}} — Fish Zone</figcaption>
-            </figure>
-
-            <!-- Mobile TOC -->
-            <details class="lg:hidden mb-10 border border-gray-200 group" open>
-                <summary class="p-4 font-display text-sm uppercase tracking-widest cursor-pointer select-none flex justify-between items-center [&::-webkit-details-marker]:hidden">
-                    Содержание статьи
-                    <svg class="w-4 h-4 transition-transform duration-300 group-open:rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </summary>
-                <div class="px-4 pb-4">{{article_toc}}</div>
-            </details>
-
-            <!-- Article body -->
-            <article class="prose-custom leading-relaxed text-gray-800">
-                {{article_body}}
-            </article>
-
-            <footer class="mt-16 pt-8 border-t border-gray-200">
-                <div class="flex items-center gap-4 mb-8">
-                    <span class="font-mono text-xs text-gray-400">Поделиться:</span>
-                    <a href="https://t.me/share/url?url={{canonical}}&text={{title}}" target="_blank" rel="noopener" class="text-sm border border-gray-300 px-4 py-2 hover:bg-black hover:text-white transition font-mono">Telegram</a>
-                    <a href="https://wa.me/?text={{title}}%20{{canonical}}" target="_blank" rel="noopener" class="text-sm border border-gray-300 px-4 py-2 hover:bg-black hover:text-white transition font-mono">WhatsApp</a>
-                </div>
-
-                <!-- Related / Next -->
-                <div class="bg-black text-white p-8 text-center">
-                    <p class="font-display text-2xl uppercase mb-2">Больше материалов о спиннинге</p>
-                    <p class="text-gray-400 mb-6 text-sm">Снасти, приманки, техники и виды рыб — в блоге Fish Zone</p>
-                    <a href="{{blog_url}}/index.html" class="inline-block bg-white text-black px-8 py-4 font-display uppercase tracking-widest text-sm hover:bg-offwhite transition">Все статьи</a>
-                </div>
-
-                <!-- Related articles -->
-                {{article_related}}
-            </footer>
-        </div>
+    <div class="toc">
+      <h2>Содержание</h2>
+      {{article_toc}}
     </div>
+
+    <div class="prose">
+      {{article_body}}
+    </div>
+
+    <footer class="article-foot">
+      <div class="share">
+        <span class="lbl">Поделиться:</span>
+        <a href="https://t.me/share/url?url={{canonical}}&text={{title}}" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://wa.me/?text={{title}}%20{{canonical}}" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+      <div class="related">
+        {{article_related}}
+      </div>
+    </footer>
+  </article>
 </main>
 
-<!-- ===== FOOTER ===== -->
-<footer class="border-t border-gray-200 py-8 px-6">
-    <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-        <p class="font-mono text-xs text-gray-400">© {{site_name}} {{copyright_year}}. Блог о спиннинговой ловле.</p>
-        <div class="flex gap-6">
-            <a href="{{blog_url}}/index.html" class="text-xs font-mono text-gray-400 hover:text-black transition">Блог</a>
-            <a href="{{blog_url}}/?cat=tackle" class="text-xs font-mono text-gray-400 hover:text-black transition">Снасти</a>
-            <a href="{{blog_url}}/?cat=fish" class="text-xs font-mono text-gray-400 hover:text-black transition">Виды рыб</a>
-        </div>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <a class="brand" href="#top">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V6"/><path d="M12 6C7 6 4 8.5 3.5 11c.5 2.5 3.5 5 8.5 5s8-2.5 8.5-5C20 8.5 17 6 12 6z"/><path d="M10.5 6.5c.5-.7 1.4-1.2 2.6-1.4.5 1 .2 1.9-.6 2.4"/></svg>
+          </span>
+          FishZone
+        </a>
+        <p class="footer-desc">Блог о спиннинговой ловле: практические руководства для рыболовов-спиннингистов.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Разделы</h4>
+        <a href="{{blog_url}}/index.html">Все статьи</a>
+        <a href="{{blog_url}}/index.html#categories">Категории</a>
+        <a href="{{blog_url}}/index.html#digest">Дайджест</a>
+      </div>
+      <div class="footer-col">
+        <h4>Категории</h4>
+        <a href="{{blog_url}}/index.html#articles">Техники ловли</a>
+        <a href="{{blog_url}}/index.html#articles">Виды рыб</a>
+        <a href="{{blog_url}}/index.html#articles">Снасти</a>
+      </div>
     </div>
+    <div class="footer-bottom">
+      <span>© {{copyright_year}} {{site_name}}</span>
+      <span>Блог о спиннинговой ловле</span>
+    </div>
+  </div>
 </footer>
 
-<!-- ===== PROSE STYLES ===== -->
-<style>
-    .prose-custom { font-size: 1.0625rem; line-height: 1.8; }
-    .prose-custom h2 {
-        font-family: 'Oswald', sans-serif; font-size: 2rem; text-transform: uppercase;
-        font-weight: 700; color: #0a0a0a; margin-top: 2.5em; margin-bottom: 0.75em; line-height: 1.2;
-    }
-    .prose-custom h3 {
-        font-family: 'Oswald', sans-serif; font-size: 1.5rem; text-transform: uppercase;
-        font-weight: 500; color: #0a0a0a; margin-top: 2em; margin-bottom: 0.5em; line-height: 1.25;
-    }
-    .prose-custom h4 {
-        font-family: 'Oswald', sans-serif; font-size: 1.2rem; text-transform: uppercase;
-        font-weight: 400; color: #333; margin-top: 1.5em; margin-bottom: 0.5em;
-    }
-    .prose-custom p { margin-bottom: 1.25em; }
-    .prose-custom > p:first-of-type { font-size: 1.25rem; color: #4b5563; line-height: 1.6; font-weight: 300; }
-    .prose-custom strong { font-weight: 600; color: #0a0a0a; }
-    .prose-custom a { color: #0e7490; text-decoration: underline; text-decoration-color: #99f6e4; text-underline-offset: 2px; transition: text-decoration-color 0.2s; }
-    .prose-custom a:hover { text-decoration-color: #0e7490; }
-    .prose-custom ul { margin-bottom: 1.25em; padding-left: 0; list-style: none; }
-    .prose-custom ol { margin-bottom: 1.25em; padding-left: 1.5em; }
-    .prose-custom li { margin-bottom: 0.5em; }
-    .prose-custom ul li { position: relative; padding-left: 1.5em; }
-    .prose-custom ul li::before { content: "▶"; position: absolute; left: 0; top: 0; color: #0e7490; font-size: 0.6em; line-height: inherit; }
-    .prose-custom blockquote { border-left: 3px solid #0e7490; background-color: #f9fafb; padding: 1.5em; margin: 1.5em 0; color: #111827; font-size: 1.125rem; }
-    .prose-custom img { width: 100%; height: auto; border: 1px solid #eee; margin: 1.5em 0; }
-    .prose-custom table { display: block; overflow-x: auto; white-space: nowrap; border-collapse: collapse; margin: 1.5em 0; font-size: 0.9375rem; width: 100%; }
-    @media (min-width: 768px) { .prose-custom table { display: table; white-space: normal; } }
-    .prose-custom th { background: #f4f4f4; color: #0a0a0a; font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 500; font-size: 0.875rem; letter-spacing: 0.05em; padding: 0.75em 1em; text-align: left; }
-    .prose-custom td { padding: 0.75em 1em; border-bottom: 1px solid #eee; }
-    .prose-custom tr:nth-child(even) td { background: #fafafa; }
-    .prose-custom code { background: #f4f4f4; padding: 0.15em 0.4em; border-radius: 3px; font-size: 0.9em; font-family: 'SF Mono', 'Menlo', monospace; }
-    .prose-custom pre { background: #f4f4f4; padding: 1.25em; overflow-x: auto; margin: 1.5em 0; font-size: 0.875rem; line-height: 1.6; }
-    .prose-custom pre code { background: none; padding: 0; }
-    .prose-custom hr { border: none; border-top: 1px solid #eee; margin: 2.5em 0; }
-    .toc ul { list-style: none; padding-left: 0; }
-    .toc a { text-decoration: none; color: #666; transition: color 0.2s; }
-    .toc a:hover { color: #0e7490; }
-
-    /* Callout-блоки */
-    .callout { border-left: 4px solid #0e7490; }
-    .callout-warning { border-left-color: #b45309; background: #fffbeb; }
-    .callout-myth { border-left-color: #7c3aed; background: #f5f3ff; }
-    .callout-experience { border-left-color: #0e7490; background: #f0f9ff; }
-    .callout-secret { border-left-color: #059669; background: #ecfdf5; }
-    .callout-summary { border-left-color: #0a0a0a; background: #f4f4f4; }
-    .callout .prose-custom p:last-child { margin-bottom: 0; }
-
-    /* FAQ */
-    .faq-item h3 { margin-bottom: 0.5em; }
-    .faq-item .prose-custom p:last-child { margin-bottom: 0; }
-
-    /* HowTo */
-    .howto-step h3 { margin-bottom: 0.25em; }
-    .howto-step .prose-custom p:last-child { margin-bottom: 0; }
-
-    html { scroll-behavior: smooth; scroll-padding-top: 100px; }
-    @media print { header, footer, aside, .toc, details { display: none !important; } body { font-size: 12pt; } }
-</style>
-
-<!-- Sticky ToC: подсветка активного раздела при скролле -->
 <script>
-(function() {
-    var tocLinks = document.querySelectorAll('.toc a[href^="#"]');
-    if (!tocLinks.length) return;
+(function(){
+  "use strict";
+  var burger = document.getElementById('burger');
+  var navLinks = document.getElementById('navLinks');
+  if (burger) {
+    burger.addEventListener('click', function(){
+      var open = navLinks.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+    });
+    navLinks.addEventListener('click', function(e){
+      if (e.target.tagName === 'A') { navLinks.classList.remove('open'); burger.setAttribute('aria-expanded','false'); }
+    });
+  }
+  // Sticky ToC: подсветка активного раздела
+  var tocLinks = document.querySelectorAll('.toc a[href^="#"]');
+  if (tocLinks.length) {
     var ids = [];
-    tocLinks.forEach(function(a) { ids.push(a.getAttribute('href').slice(1)); });
-
-    function setActive(id) {
-        tocLinks.forEach(function(a) {
-            var active = a.getAttribute('href') === '#' + id;
-            a.style.color = active ? '#0e7490' : '';
-            a.style.fontWeight = active ? '600' : '';
-        });
+    tocLinks.forEach(function(a){ ids.push(a.getAttribute('href').slice(1)); });
+    function setActive(id){
+      tocLinks.forEach(function(a){
+        var active = a.getAttribute('href') === '#' + id;
+        a.parentElement.classList.toggle('active', active);
+      });
     }
-
-    var headings = ids.map(function(id) { return document.getElementById(id); }).filter(Boolean);
-    function onScroll() {
-        var pos = window.scrollY + 120;
-        var current = null;
-        headings.forEach(function(h) { if (h.offsetTop <= pos) current = h.id; });
-        if (current) setActive(current);
+    var heads = ids.map(function(id){ return document.getElementById(id); }).filter(Boolean);
+    function onScroll(){
+      var pos = window.scrollY + 130;
+      var cur = null;
+      heads.forEach(function(h){ if (h.offsetTop <= pos) cur = h.id; });
+      if (cur) setActive(cur);
     }
-    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('scroll', onScroll, {passive:true});
     onScroll();
+  }
 })();
 </script>
-
 </body>
 </html>

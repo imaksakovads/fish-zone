@@ -557,8 +557,28 @@ def build_index(posts: list[dict], template: str) -> str:
         "publisher": {"@type": "Organization", "name": SITE_NAME, "url": SITE_URL},
     }, ensure_ascii=False, indent=2)
 
+    # Маппинг категории → data-filter + дуотон-класс + короткая подпись для обложки
+    CAT_FILTER = {"technique": "tehniki", "fish": "vidy", "tackle": "snasti", "lure": "tehniki",
+                  "rig": "tehniki", "season": "vidy", "rating": "snasti"}
+    CAT_DUO = {"technique": "d1", "fish": "d3", "tackle": "d4", "lure": "d2",
+               "rig": "d2", "season": "d3", "rating": "d4"}
+    # Короткая подпись для дуотон-обложки (упрощённое название статьи)
+    def duo_label(title: str, cat: str) -> str:
+        t = title
+        for w in ("Как ловить ", "Как выбрать ", "на спиннинге", " для начинающих",
+                  " полный гид", " руководство", " техника ловли", " удилищу", " снасти",
+                  ": техника и снасти", " уловистые приёмы и приманки"):
+            t = t.replace(w, "")
+        t = t.rstrip(":;., ")
+        # вернуть первые 3-4 слова
+        words = [x for x in t.split() if x]
+        return " ".join(words[:4]).upper() or title[:30].upper()
+
     cards: list[str] = []
-    for meta in posts:
+    total_min = 0
+    cat_counts = {"technique": 0, "fish": 0, "tackle": 0, "lure": 0, "rig": 0, "season": 0, "rating": 0}
+
+    for i, meta in enumerate(posts, 1):
         slug = meta.get("slug") or slugify(meta["title"])
         url = f"{BLOG_URL}/{slug}.html"
         img_url = meta.get("image", "")
@@ -567,37 +587,60 @@ def build_index(posts: list[dict], template: str) -> str:
         date_fmt = format_date(meta.get("date", ""))
         date_iso = to_iso_date(meta.get("date", ""))
         read_min = calc_reading_time(meta.get("_body", ""))
-        cat_name = CATEGORY_NAMES.get(meta.get("category", ""), "")
+        total_min += read_min
+        cat = meta.get("category", "")
+        cat_name = CATEGORY_NAMES.get(cat, cat)
+        cat_counts[cat] = cat_counts.get(cat, 0) + 1
+        dfilter = CAT_FILTER.get(cat, "tehniki")
+        duo = CAT_DUO.get(cat, "d1")
+        label = duo_label(meta.get("title", ""), cat)
 
-        card = f"""<article class="border border-gray-200 group hover:border-black transition duration-300 flex flex-col">
-    <div class="h-56 overflow-hidden border-b border-gray-200">
-        <img src="{img_url}" alt="{escape(meta.get('image_alt', meta.get('title', '')))}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700" width="800" height="448" loading="lazy">
-    </div>
-    <div class="p-6 flex flex-col flex-1">
-        <div class="flex items-center gap-3 mb-3">
-            <time datetime="{date_iso}" class="font-mono text-xs text-gray-400">{date_fmt}</time>
-            <span class="text-gray-300">·</span>
-            <span class="font-mono text-xs text-gray-400">{read_min} мин</span>
-        </div>
-        <h2 class="font-display text-xl uppercase mb-3 leading-tight">
-            <a href="{url}" class="hover:text-gray-500 transition">{escape(meta.get('title', ''))}</a>
-        </h2>
-        <p class="text-gray-600 text-sm leading-relaxed mb-4 flex-1">{escape(meta.get('description', ''))}</p>
-        {f'<div class="font-mono text-xs text-gray-400">{escape(cat_name)}</div>' if cat_name else ''}
-    </div>
-</article>"""
-        cards.append(card.strip())
+        # Медиа: фото если есть, иначе дуотон
+        if img_url:
+            media = (
+                f'<div class="card-media photo">'
+                f'<img src="{img_url}" alt="{escape(meta.get("image_alt", meta.get("title", "")))}" loading="lazy">'
+                f'<span class="card-no">№ {i:02d}</span>'
+                f'<span class="card-cat">{escape(cat_name or "")}</span>'
+                f'<span class="duo-label">{escape(label)}</span></div>'
+            )
+        else:
+            media = (
+                f'<div class="card-media duo {duo}">'
+                f'<div class="rings" aria-hidden="true"><i></i><i></i><i></i><i></i></div>'
+                f'<span class="card-no">№ {i:02d}</span>'
+                f'<span class="card-cat">{escape(cat_name or "")}</span>'
+                f'<span class="duo-label">{escape(label)}</span></div>'
+            )
+
+        card = (
+            f'<article class="card" data-cat="{dfilter}">'
+            f'{media}'
+            f'<div class="card-body">'
+            f'<div class="card-meta"><time datetime="{date_iso}">{date_fmt}</time><span class="dot"></span><span>{read_min} мин</span></div>'
+            f'<h3><a href="{url}">{escape(meta.get("title", "") or "")}</a></h3>'
+            f'<p>{escape(meta.get("description", ""))}</p>'
+            f'<div class="card-foot">'
+            f'<a class="card-read" href="{url}">Читать <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>'
+            f'<span class="card-tag">{escape((cat_name or "").lower())}</span>'
+            f'</div></div></article>'
+        )
+        cards.append(card)
 
     return render(
         template,
         title=f"Блог {SITE_NAME} — спиннинговая ловля",
         description="Блог о спиннинговой ловле: как выбрать снасти, ловить хищника, освоить техники проводки. Практические руководства для рыболовов.",
         canonical=BLOG_URL,
-        og_image=f"{SITE_URL}/images/default-cover.webp",
+        og_image=f"{SITE_URL}/static/fish-zone-preview.png",
         og_image_alt=f"Блог {SITE_NAME}",
         jsonld_blog=jsonld_blog,
         article_cards="\n".join(cards) if cards else "",
         article_count=str(len(posts)),
+        total_minutes=str(total_min),
+        cat_technique=str(cat_counts.get("technique", 0) + cat_counts.get("lure", 0) + cat_counts.get("rig", 0)),
+        cat_fish=str(cat_counts.get("fish", 0) + cat_counts.get("season", 0)),
+        cat_tackle=str(cat_counts.get("tackle", 0) + cat_counts.get("rating", 0)),
         site_url=SITE_URL,
         blog_url=BLOG_URL,
         site_name=SITE_NAME,

@@ -1,126 +1,446 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="index, follow">
-    <link rel="alternate" hreflang="ru" href="{{canonical}}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index, follow">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<link rel="canonical" href="{{canonical}}">
+<!-- Open Graph -->
+<meta property="og:locale" content="ru_RU">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{canonical}}">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:image" content="{{og_image}}">
+<meta property="og:site_name" content="{{site_name}}">
+<!-- JSON-LD -->
+<script type="application/ld+json">{{jsonld_blog}}</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111715500', 'ym');
+    ym(111715500, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/111715500" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg:      oklch(0.984 0.003 247.9);
+  --surface: oklch(1.000 0.000 89.9);
+  --fg:      oklch(0.208 0.040 265.8);
+  --muted:   oklch(0.446 0.037 257.3);
+  --border:  oklch(0.929 0.013 255.5);
+  --accent:  oklch(0.520 0.094 223.1);
+  --accent-strong: oklch(0.450 0.077 224.3);
+  --accent-soft:   oklch(0.953 0.029 221.7);
+  --deep:    oklch(0.310 0.060 224.9);
+  --deep-2:  oklch(0.260 0.052 225.5);
+  --deep-3:  oklch(0.390 0.070 223.5);
+  --on-deep: oklch(0.980 0.004 250.0);
+  --on-deep-muted: oklch(0.780 0.030 226.0);
+  --danger:  oklch(0.577 0.245 27.3);
+  --font-display: "Oswald", "Arial Narrow", sans-serif;
+  --font-body: "Manrope", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --radius: 18px;
+  --shadow: 0 1px 2px oklch(0.208 0.040 265.8 / 0.04), 0 8px 24px oklch(0.208 0.040 265.8 / 0.06);
+  --maxw: 1180px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{
+  font-family:var(--font-body);
+  background:var(--bg);
+  color:var(--fg);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+img{display:block;max-width:100%}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:var(--accent-strong)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+::selection{background:var(--accent);color:#fff}
 
-    <title>{{title}}</title>
-    <meta name="description" content="{{description}}">
-    <link rel="canonical" href="{{canonical}}">
+/* ============ NAV ============ */
+.nav{position:sticky;top:0;z-index:50;background:oklch(0.984 0.003 247.9 / 0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:600;font-size:21px;letter-spacing:0.04em;text-transform:uppercase;color:var(--fg)}
+.brand-mark{width:34px;height:34px;border-radius:10px;flex:none;background:linear-gradient(160deg,var(--deep-3),var(--deep));display:grid;place-items:center}
+.brand-mark svg{width:19px;height:19px}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-family:var(--font-display);font-size:13px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);padding:6px 2px;position:relative}
+.nav-links a:hover{color:var(--accent-strong)}
+.nav-links a.active{color:var(--accent-strong)}
+.nav-links a.active::after{content:"";position:absolute;left:2px;right:2px;bottom:0;height:2px;background:var(--accent);border-radius:2px}
+.nav-count{font-family:var(--font-mono);font-size:11px;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:1px 7px;margin-left:6px}
+.nav-cta{font-family:var(--font-display);font-size:13px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;background:var(--accent);color:#fff;padding:13px 22px;min-height:44px;border-radius:10px;display:inline-flex;align-items:center;gap:8px;transition:background 0.2s ease, transform 0.1s ease}
+.nav-cta:hover{background:var(--accent-strong);color:#fff;transform:translateY(-1px)}
+.nav-cta svg{width:14px;height:14px}
+.burger{display:none}
 
-    <!-- Open Graph -->
-    <meta property="og:locale" content="ru_RU">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{canonical}}">
-    <meta property="og:title" content="{{title}}">
-    <meta property="og:description" content="{{description}}">
-    <meta property="og:image" content="{{og_image}}">
-    <meta property="og:site_name" content="{{site_name}}">
+/* ============ HERO ============ */
+.hero{position:relative;color:var(--on-deep);background:radial-gradient(900px 500px at 82% -10%, oklch(0.52 0.094 223.1 / 0.35), transparent 60%),radial-gradient(700px 420px at -5% 110%, oklch(0.45 0.077 224.3 / 0.40), transparent 60%),linear-gradient(180deg, var(--deep-2), var(--deep) 70%);overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(2px 2px at 20% 30%, oklch(1 0 0 / 0.35) 50%, transparent 52%),radial-gradient(2px 2px at 70% 18%, oklch(1 0 0 / 0.28) 50%, transparent 52%),radial-gradient(1.6px 1.6px at 45% 60%, oklch(1 0 0 / 0.22) 50%, transparent 52%),radial-gradient(1.6px 1.6px at 88% 55%, oklch(1 0 0 / 0.25) 50%, transparent 52%),radial-gradient(2px 2px at 12% 78%, oklch(1 0 0 / 0.18) 50%, transparent 52%),radial-gradient(1.5px 1.5px at 58% 85%, oklch(1 0 0 / 0.2) 50%, transparent 52%);pointer-events:none}
+.water-rings{position:absolute;right:-180px;top:50%;transform:translateY(-50%);width:640px;height:640px;pointer-events:none;opacity:0.85}
+.water-rings span{position:absolute;inset:0;border-radius:50%;border:1px solid oklch(1 0 0 / 0.14)}
+.water-rings span:nth-child(1){inset:0}
+.water-rings span:nth-child(2){inset:70px}
+.water-rings span:nth-child(3){inset:140px}
+.water-rings span:nth-child(4){inset:210px}
+.water-rings span:nth-child(5){inset:280px}
+.hero-inner{position:relative;z-index:2;padding:124px 0 116px;max-width:640px}
+.hero-kicker{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:12.5px;letter-spacing:0.04em;color:oklch(0.85 0.05 220);background:oklch(1 0 0 / 0.06);border:1px solid oklch(1 0 0 / 0.14);border-radius:999px;padding:7px 14px;margin-bottom:26px}
+.hero-kicker::before{content:"";width:7px;height:7px;border-radius:50%;background:oklch(0.75 0.12 190);box-shadow:0 0 0 4px oklch(0.75 0.12 190 / 0.2)}
+.hero h1{font-family:var(--font-display);font-weight:600;font-size:clamp(44px, 6vw, 68px);line-height:1.04;letter-spacing:-0.015em;text-transform:uppercase;color:var(--on-deep)}
+.hero h1 .accent-line{color:oklch(0.80 0.10 205)}
+.hero-sub{margin-top:22px;max-width:52ch;font-size:17px;line-height:1.65;color:var(--on-deep-muted)}
+.hero-meta{margin-top:34px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.hero-stat{display:flex;align-items:baseline;gap:8px;font-family:var(--font-mono);font-size:13px;color:var(--on-deep-muted)}
+.hero-stat b{font-family:var(--font-display);font-size:22px;font-weight:600;color:var(--on-deep);letter-spacing:0.02em}
+.hero-divider{width:1px;height:26px;background:oklch(1 0 0 / 0.18)}
+.hero-cta{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:14px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;background:#fff;color:var(--deep);padding:14px 26px;border-radius:12px;margin-top:36px;transition:transform 0.15s ease, box-shadow 0.2s ease;box-shadow:0 10px 30px oklch(0.2 0.05 230 / 0.35)}
+.hero-cta:hover{color:var(--deep);transform:translateY(-2px);box-shadow:0 16px 36px oklch(0.2 0.05 230 / 0.45)}
+.hero-cta svg{width:15px;height:15px}
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{title}}">
-    <meta name="twitter:description" content="{{description}}">
+/* ============ SECTION HEADS ============ */
+.sec{padding:84px 0}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px}
+.sec-eyebrow{font-family:var(--font-mono);font-size:12.5px;letter-spacing:0.05em;color:var(--accent);text-transform:uppercase;margin-bottom:10px}
+.sec h2{font-family:var(--font-display);font-weight:600;font-size:clamp(30px, 3.6vw, 42px);line-height:1.08;letter-spacing:-0.01em;text-transform:uppercase}
+.sec-note{max-width:38ch;color:var(--muted);font-size:15px;text-align:right}
 
-    <!-- JSON-LD: Blog -->
-    <script type="application/ld+json">{{jsonld_blog}}</script>
+/* ============ FILTERS ============ */
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:44px}
+.f-btn{font-family:var(--font-display);font-size:13px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:12px 22px;min-height:44px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all 0.18s ease}
+.f-btn .n{font-family:var(--font-mono);font-size:11px;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:0 7px;line-height:18px}
+.f-btn:hover{border-color:var(--accent);color:var(--accent-strong)}
+.f-btn[aria-pressed="true"]{background:var(--deep);border-color:var(--deep);color:#fff}
+.f-btn[aria-pressed="true"] .n{background:oklch(1 0 0 / 0.16);color:#fff}
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="{{site_url}}/favicon.svg">
+/* ============ CARDS ============ */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:oklch(0.85 0.03 225)}
+.card-media{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--deep-2)}
+.card-media img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease}
+.card-media::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(200deg, oklch(0.31 0.06 224.9 / 0.0) 40%, oklch(0.31 0.06 224.9 / 0.55) 100%);pointer-events:none}
+.card:hover .card-media img{transform:scale(1.045)}
+.card-no{position:absolute;top:14px;left:14px;z-index:3;font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.06em;color:#fff;background:oklch(0.2 0.05 230 / 0.55);backdrop-filter:blur(6px);border:1px solid oklch(1 0 0 / 0.25);border-radius:8px;padding:5px 9px}
+.card-cat{position:absolute;top:14px;right:14px;z-index:3;font-family:var(--font-display);font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:#fff;background:oklch(0.2 0.05 230 / 0.55);backdrop-filter:blur(6px);border:1px solid oklch(1 0 0 / 0.25);border-radius:7px;padding:5px 10px}
+.card-body{padding:22px 24px 24px;display:flex;flex-direction:column;flex:1}
+.card-meta{display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:11.5px;color:var(--muted);letter-spacing:0.03em;margin-bottom:10px}
+.card-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--border)}
+.card h3{font-family:var(--font-display);font-weight:600;font-size:21px;line-height:1.22;letter-spacing:0.005em;text-transform:uppercase;margin-bottom:10px}
+.card h3 a{color:var(--fg)}
+.card h3 a:hover{color:var(--accent-strong)}
+.card p{font-size:14.5px;line-height:1.6;color:var(--muted);flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card-foot{margin-top:18px;padding-top:16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.card-read{font-family:var(--font-display);font-size:12.5px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--fg);display:inline-flex;align-items:center;gap:7px;padding:6px 0;min-height:40px}
+.card-read:hover{color:var(--accent-strong);text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:2px}
+.card-read svg{width:13px;height:13px;transition:transform 0.2s ease}
+.card:hover .card-read svg{transform:translateX(3px)}
+.card-tag{font-family:var(--font-mono);font-size:11px;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:3px 8px}
 
-    <!-- Tailwind + Fonts -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+/* дуотон-обложки */
+.duo{position:relative;display:flex;align-items:flex-end;padding:20px;color:#fff;overflow:hidden}
+.duo::before{content:"";position:absolute;inset:0;opacity:0.5;z-index:1;background:radial-gradient(320px 320px at 85% 12%, oklch(0.75 0.12 190 / 0.5), transparent 70%),radial-gradient(240px 240px at 12% 88%, oklch(0.55 0.10 210 / 0.55), transparent 70%)}
+.duo .rings{position:absolute;inset:-20% -10% auto auto;width:75%;aspect-ratio:1;pointer-events:none;z-index:1}
+.duo .rings i{position:absolute;border:1.5px solid oklch(1 0 0 / 0.22);border-radius:50%}
+.duo .rings i:nth-child(1){inset:8%}
+.duo .rings i:nth-child(2){inset:24%}
+.duo .rings i:nth-child(3){inset:40%}
+.duo .rings i:nth-child(4){inset:56%}
+.duo-label{position:relative;z-index:2;font-family:var(--font-display);font-weight:600;font-size:26px;line-height:1.1;text-transform:uppercase;letter-spacing:0.01em;text-shadow:0 2px 14px oklch(0.2 0.05 230 / 0.45);max-width:9ch}
+.card-media.photo{display:flex;flex-direction:column}
+.card-media.photo .duo-label{margin-top:auto}
+.card-media.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.card-media.photo::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(190deg, oklch(0.26 0.052 225.5 / 0.15) 30%, oklch(0.26 0.052 225.5 / 0.82) 100%);pointer-events:none}
+.duo.d1{background:linear-gradient(155deg, oklch(0.44 0.095 212), oklch(0.30 0.07 225))}
+.duo.d2{background:linear-gradient(155deg, oklch(0.40 0.09 235), oklch(0.26 0.06 240))}
+.duo.d3{background:linear-gradient(155deg, oklch(0.50 0.10 200), oklch(0.32 0.075 220))}
+.duo.d4{background:linear-gradient(155deg, oklch(0.46 0.095 218), oklch(0.28 0.065 232))}
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Manrope', 'sans-serif'],
-                        display: ['Oswald', 'sans-serif'],
-                    },
-                    colors: {
-                        black: '#0a0a0a',
-                        water: '#0e7490',
-                        offwhite: '#f4f4f4',
-                    }
-                }
-            }
-        }
-    </script>
+/* ============ CTA ============ */
+.cta-band{background:radial-gradient(760px 380px at 90% 0%, oklch(0.52 0.094 223.1 / 0.3), transparent 65%),linear-gradient(180deg, var(--deep-2), var(--deep));color:var(--on-deep);border-radius:24px;padding:64px 64px 60px;position:relative;overflow:hidden;display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center}
+.cta-band::after{content:"";position:absolute;right:-120px;bottom:-160px;width:460px;height:460px;border-radius:50%;border:1px solid oklch(1 0 0 / 0.12);box-shadow:0 0 0 60px oklch(1 0 0 / 0.04), 0 0 0 120px oklch(1 0 0 / 0.03);pointer-events:none}
+.cta-kicker{font-family:var(--font-mono);font-size:12.5px;letter-spacing:0.05em;color:oklch(0.82 0.07 205);text-transform:uppercase;margin-bottom:14px}
+.cta-band h2{font-family:var(--font-display);font-weight:600;font-size:clamp(28px, 3.2vw, 40px);line-height:1.1;letter-spacing:-0.01em;text-transform:uppercase;max-width:16ch}
+.cta-band p{margin-top:16px;color:var(--on-deep-muted);max-width:46ch;font-size:15.5px}
+.cta-form{display:flex;gap:10px;margin-top:28px;max-width:440px}
+.cta-form input{flex:1;min-width:0;height:50px;padding:0 18px;border-radius:11px;border:1px solid oklch(1 0 0 / 0.2);background:oklch(1 0 0 / 0.08);color:var(--on-deep);font-family:var(--font-body);font-size:15px}
+.cta-form input::placeholder{color:oklch(0.8 0.03 225 / 0.75)}
+.cta-form input:focus{outline:2px solid oklch(0.75 0.12 195);outline-offset:2px;background:oklch(1 0 0 / 0.12)}
+.cta-form button{height:50px;padding:0 24px;border:none;border-radius:11px;cursor:pointer;font-family:var(--font-display);font-size:13.5px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--deep);background:#fff;transition:transform 0.15s ease, box-shadow 0.2s ease;box-shadow:0 8px 24px oklch(0.2 0.05 230 / 0.3)}
+.cta-form button:hover{transform:translateY(-2px)}
+.cta-form button:active{transform:translateY(0)}
+.cta-note{margin-top:12px;font-size:12.5px;color:oklch(0.78 0.03 225 / 0.8)}
+.cta-rings{position:relative;height:280px}
+.cta-rings .r{position:absolute;border-radius:50%;border:1px solid oklch(1 0 0 / 0.14)}
+.cta-rings .r1{inset:calc(50% - 130px)}
+.cta-rings .r2{inset:calc(50% - 82px)}
+.cta-rings .r3{inset:calc(50% - 40px)}
+.cta-rings .r4{inset:calc(50% - 6px)}
+.cta-rings .drop{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;background:oklch(0.8 0.11 195);box-shadow:0 0 0 10px oklch(0.8 0.11 195 / 0.25)}
 
-    <!-- Yandex.Metrika counter -->
-    <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111715500', 'ym');
+/* ============ FOOTER ============ */
+.footer{border-top:1px solid var(--border);padding:52px 0 40px;margin-top:24px}
+.footer-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.footer .brand{font-size:19px}
+.footer-desc{max-width:34ch;color:var(--muted);font-size:13.5px;margin-top:12px}
+.footer-col h4{font-family:var(--font-display);font-size:12px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--fg);margin-bottom:14px}
+.footer-col a{display:block;color:var(--muted);font-size:14px;padding:4px 0}
+.footer-col a:hover{color:var(--accent-strong)}
+.footer-bottom{margin-top:40px;padding-top:22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--font-mono);font-size:12px;color:var(--muted);letter-spacing:0.03em}
 
-        ym(111715500, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/111715500" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
+/* ============ RESPONSIVE ============ */
+@media (max-width: 980px){
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .cta-band{grid-template-columns:1fr;padding:48px 36px}
+  .cta-rings{display:none}
+  .nav-links{display:none}
+  .burger{display:grid;place-items:center;width:44px;height:44px;border-radius:10px;border:1px solid var(--border);background:var(--surface);cursor:pointer}
+  .burger svg{width:20px;height:20px}
+  .nav-links.open{display:flex;flex-direction:column;align-items:flex-start;gap:6px;position:absolute;top:68px;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);padding:18px 24px 22px;box-shadow:var(--shadow)}
+  .nav-links.open a{padding:10px 0}
+}
+@media (max-width: 640px){
+  .hero-inner{padding:76px 0 88px}
+  .hero h1{font-size:40px}
+  .cards{grid-template-columns:1fr}
+  .sec{padding:64px 0}
+  .sec-head{flex-direction:column;align-items:flex-start}
+  .sec-note{text-align:left}
+  .cta-band{padding:40px 26px}
+  .cta-form{flex-direction:column}
+  .cta-form button{width:100%}
+}
+</style>
 </head>
-<body class="antialiased bg-white text-black">
+<body>
 
-<!-- ===== HEADER ===== -->
-<header class="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
-    <div class="max-w-[1600px] mx-auto flex justify-between items-center px-6 py-4">
-        <a href="{{site_url}}" class="font-display font-bold text-2xl tracking-tighter uppercase">
-            Fish<span class="text-water">Zone</span>
-        </a>
-        <nav class="flex gap-6 items-center">
-            <a href="{{blog_url}}/index.html" class="text-sm uppercase tracking-widest hover:text-water transition border-b border-black">Блог</a>
-            <a href="{{blog_url}}/?cat=tackle" class="text-sm uppercase tracking-widest hover:text-water transition hidden md:inline">Снасти</a>
-            <a href="{{blog_url}}/?cat=technique" class="text-sm uppercase tracking-widest hover:text-water transition hidden md:inline">Техники</a>
-        </nav>
-    </div>
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="{{site_url}}" aria-label="FishZone — на главную">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V6"/><path d="M12 6C7 6 4 8.5 3.5 11c.5 2.5 3.5 5 8.5 5s8-2.5 8.5-5C20 8.5 17 6 12 6z"/><path d="M10.5 6.5c.5-.7 1.4-1.2 2.6-1.4.5 1 .2 1.9-.6 2.4"/></svg>
+      </span>
+      FishZone
+    </a>
+    <nav class="nav-links" id="navLinks" aria-label="Основная навигация">
+      <a href="#articles" class="active">Статьи <span class="nav-count">{{article_count}}</span></a>
+      <a href="#categories">Категории</a>
+      <a href="#digest">Дайджест</a>
+    </nav>
+    <a class="nav-cta" href="#digest">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+      Подписаться
+    </a>
+    <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="navLinks">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
 </header>
 
-<!-- ===== HERO ===== -->
-<section class="pt-32 pb-12 px-6 max-w-[1600px] mx-auto border-b border-gray-200">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div class="lg:col-span-7">
-            <p class="text-sm font-mono text-water mb-4 tracking-widest">БЛОГ О СПИННИНГОВОЙ ЛОВЛЕ</p>
-            <h1 class="font-display font-bold text-5xl md:text-7xl uppercase big-type mb-6 leading-none">
-                Блог<br>Fish<span class="text-water">Zone</span>
-            </h1>
-            <p class="text-gray-600 max-w-lg leading-relaxed">
-                О выборе снастей, приманках, техниках проводки и ловле хищной рыбы.
-                Практические руководства для рыболовов-спиннингистов.
-            </p>
-        </div>
-        <div class="lg:col-span-5 flex items-end justify-start lg:justify-end">
-            <p class="font-mono text-xs text-gray-400">{{article_count}} статей · Обновлено {{site_name}}</p>
-        </div>
+<main id="top">
+
+<section class="hero">
+  <div class="water-rings" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="container">
+    <div class="hero-inner">
+      <span class="hero-kicker">Блог о спиннинговой ловле</span>
+      <h1>Ловля хищника <span class="accent-line">— наука,</span> а не удача</h1>
+      <p class="hero-sub">О выборе снастей, приманках, техниках проводки и повадках хищной рыбы. Практические руководства для рыболовов-спиннингистов — от первого заброса до трофея.</p>
+      <div class="hero-meta">
+        <span class="hero-stat"><b>{{article_count}}</b> руководств</span>
+        <span class="hero-divider" aria-hidden="true"></span>
+        <span class="hero-stat"><b>{{total_minutes}}</b> минут чтения</span>
+        <span class="hero-divider" aria-hidden="true"></span>
+        <span class="hero-stat"><b>3</b> категории</span>
+      </div>
+      <a class="hero-cta" href="#articles">
+        К статьям
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
     </div>
+  </div>
 </section>
 
-<!-- ===== POSTS GRID ===== -->
-<main class="max-w-[1600px] mx-auto px-6 py-12">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {{article_cards}}
+<section class="sec" id="articles">
+  <div class="container">
+    <div class="sec-head">
+      <div>
+        <div class="sec-eyebrow">Библиотека</div>
+        <h2>Все руководства</h2>
+      </div>
+      <p class="sec-note">{{article_count}} полных гайдов: от выбора первого спиннинга до техники джига на течении.</p>
     </div>
+
+    <div class="filters" role="group" aria-label="Фильтр по категориям">
+      <button class="f-btn" aria-pressed="true" data-filter="all">Все <span class="n">{{article_count}}</span></button>
+      <button class="f-btn" aria-pressed="false" data-filter="tehniki">Техники ловли <span class="n">{{cat_technique}}</span></button>
+      <button class="f-btn" aria-pressed="false" data-filter="vidy">Виды рыб <span class="n">{{cat_fish}}</span></button>
+      <button class="f-btn" aria-pressed="false" data-filter="snasti">Снасти <span class="n">{{cat_tackle}}</span></button>
+    </div>
+
+    <div class="cards" id="cards">
+      {{article_cards}}
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="categories" style="padding-top:0">
+  <div class="container">
+    <div class="sec-head">
+      <div>
+        <div class="sec-eyebrow">Навигация по блогу</div>
+        <h2>Категории</h2>
+      </div>
+      <p class="sec-note">Три направления — от выбора снастей до поведения конкретной рыбы.</p>
+    </div>
+    <div class="cards" style="grid-template-columns:repeat(3,1fr)">
+      <a class="card" href="#articles" style="text-decoration:none;color:inherit">
+        <div class="card-media duo d1" style="aspect-ratio:16/7"><div class="rings" aria-hidden="true"><i></i><i></i><i></i><i></i></div><span class="duo-label">Техники ловли</span></div>
+        <div class="card-body">
+          <div class="card-meta"><span class="card-tag" style="background:var(--accent-soft);border:none;color:var(--accent-strong)">{{cat_technique}} статьи</span></div>
+          <h3 style="font-size:19px;margin-bottom:6px">Джиг и проводки</h3>
+          <p>Ступенчатая проводка, волочение, твичинг — как читать дно и заставить хищника клевать.</p>
+        </div>
+      </a>
+      <a class="card" href="#articles" style="text-decoration:none;color:inherit">
+        <div class="card-media duo d3" style="aspect-ratio:16/7"><div class="rings" aria-hidden="true"><i></i><i></i><i></i><i></i></div><span class="duo-label">Виды рыб</span></div>
+        <div class="card-body">
+          <div class="card-meta"><span class="card-tag" style="background:var(--accent-soft);border:none;color:var(--accent-strong)">{{cat_fish}} статьи</span></div>
+          <h3 style="font-size:19px;margin-bottom:6px">Окунь · щука · судак</h3>
+          <p>Повадки, сезонность и точки стоянки главных хищников пресных водоёмов.</p>
+        </div>
+      </a>
+      <a class="card" href="#articles" style="text-decoration:none;color:inherit">
+        <div class="card-media duo d4" style="aspect-ratio:16/7"><div class="rings" aria-hidden="true"><i></i><i></i><i></i><i></i></div><span class="duo-label">Снасти</span></div>
+        <div class="card-body">
+          <div class="card-meta"><span class="card-tag" style="background:var(--accent-soft);border:none;color:var(--accent-strong)">{{cat_tackle}} статьи</span></div>
+          <h3 style="font-size:19px;margin-bottom:6px">Спиннинг и катушка</h3>
+          <p>Длина, тест, строй, размер шпули и передаточное число — гид по покупке без переплат.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="digest" style="padding-top:0">
+  <div class="container">
+    <div class="cta-band">
+      <div>
+        <div class="cta-kicker">Дайджест FishZone</div>
+        <h2>Одна поклёвка в неделю — в вашей почте</h2>
+        <p>Короткое письмо о новых руководствах: одна техника, одна приманка, одна точка. Без спама — только то, что работает на воде.</p>
+        <form class="cta-form" id="digestForm">
+          <label for="emailInput" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Электронная почта</label>
+          <input id="emailInput" type="email" required placeholder="ваш@email.ru" autocomplete="email">
+          <button type="submit">Подписаться</button>
+        </form>
+        <p class="cta-note" id="formNote">Письма приходят раз в неделю. Отписка — в один клик.</p>
+      </div>
+      <div class="cta-rings" aria-hidden="true">
+        <span class="r r1"></span><span class="r r2"></span><span class="r r3"></span><span class="r r4"></span>
+        <span class="drop"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
 </main>
 
-<!-- ===== FOOTER ===== -->
-<footer class="border-t border-gray-200 py-8 px-6">
-    <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-        <p class="font-mono text-xs text-gray-400">© {{site_name}} {{copyright_year}}. Блог о спиннинговой ловле.</p>
-        <div class="flex gap-6">
-            <a href="{{blog_url}}/index.html" class="text-xs font-mono text-gray-400 hover:text-black transition">Блог</a>
-            <a href="{{blog_url}}/?cat=tackle" class="text-xs font-mono text-gray-400 hover:text-black transition">Снасти</a>
-            <a href="{{blog_url}}/?cat=fish" class="text-xs font-mono text-gray-400 hover:text-black transition">Виды рыб</a>
-        </div>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <a class="brand" href="#top">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V6"/><path d="M12 6C7 6 4 8.5 3.5 11c.5 2.5 3.5 5 8.5 5s8-2.5 8.5-5C20 8.5 17 6 12 6z"/><path d="M10.5 6.5c.5-.7 1.4-1.2 2.6-1.4.5 1 .2 1.9-.6 2.4"/></svg>
+          </span>
+          FishZone
+        </a>
+        <p class="footer-desc">Блог о спиннинговой ловле: практические руководства для рыболовов-спиннингистов.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Разделы</h4>
+        <a href="#articles">Все статьи</a>
+        <a href="#categories">Категории</a>
+        <a href="#digest">Дайджест</a>
+      </div>
+      <div class="footer-col">
+        <h4>Категории</h4>
+        <a href="#articles">Техники ловли</a>
+        <a href="#articles">Виды рыб</a>
+        <a href="#articles">Снасти</a>
+      </div>
     </div>
+    <div class="footer-bottom">
+      <span>© 2026 {{site_name}}</span>
+      <span>Обновлено {{copyright_year}}</span>
+    </div>
+  </div>
 </footer>
 
+<script>
+(function(){
+  "use strict";
+  var burger = document.getElementById('burger');
+  var navLinks = document.getElementById('navLinks');
+  if (burger) {
+    burger.addEventListener('click', function(){
+      var open = navLinks.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+    });
+    navLinks.addEventListener('click', function(e){
+      if (e.target.tagName === 'A') { navLinks.classList.remove('open'); burger.setAttribute('aria-expanded','false'); }
+    });
+  }
+  var fBtns = document.querySelectorAll('.f-btn');
+  var cards = document.querySelectorAll('#cards .card');
+  fBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      fBtns.forEach(function(b){ b.setAttribute('aria-pressed','false'); });
+      btn.setAttribute('aria-pressed','true');
+      var f = btn.getAttribute('data-filter');
+      cards.forEach(function(card){
+        var show = (f === 'all') || card.getAttribute('data-cat') === f;
+        card.style.display = show ? '' : 'none';
+      });
+    });
+  });
+  var form = document.getElementById('digestForm');
+  var note = document.getElementById('formNote');
+  if (form) {
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var email = document.getElementById('emailInput').value.trim();
+      var re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      if (!re.test(email)) {
+        note.textContent = 'Проверьте адрес — похоже, в нём опечатка.';
+        note.style.color = 'oklch(0.85 0.14 30)';
+        document.getElementById('emailInput').focus();
+        return;
+      }
+      note.textContent = 'Готово! Первое письмо придёт в ближайший понедельник.';
+      note.style.color = 'oklch(0.85 0.12 155)';
+      form.reset();
+    });
+  }
+})();
+</script>
 </body>
 </html>
