@@ -68,6 +68,17 @@ CATEGORY_NAMES = {
     "rating": "Выбор и рейтинги",
 }
 
+# Короткое название категории (для hero-крошек статьи)
+CATEGORY_SHORT = {
+    "tackle": "Снасть",
+    "fish": "Рыбы",
+    "technique": "Техника",
+    "lure": "Приманки",
+    "rig": "Оснастка",
+    "season": "Сезон",
+    "rating": "Рейтинги",
+}
+
 # Средняя скорость чтения русского текста (слов/мин)
 READING_SPEED_WPM = 180
 
@@ -387,10 +398,16 @@ def render_callouts(body_md: str):
                 if not question:
                     question = "Вопрос"
                 faq_data.append({"q": question, "a": answer_html})
+                qnum = len(faq_data)
+                # Аккордеон (JS открывает один пункт)
                 out.append(
-                    f'<div class="faq-item border border-gray-200 p-5 mb-4">'
-                    f'<h3 class="font-display text-lg uppercase mb-2">{escape(question)}</h3>'
-                    f'<div class="prose-custom">{answer_html}</div></div>'
+                    f'<div class="faq-item" data-open="false">'
+                    f'<button class="faq-q" aria-expanded="false">'
+                    f'<span class="faq-num">Q{qnum}</span>'
+                    f'{escape(question)}'
+                    f'<svg class="faq-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>'
+                    f'</button>'
+                    f'<div class="faq-a"><p>{re.sub(r"</?p>", "", answer_html).strip()}</p></div></div>'
                 )
             elif ctype == "howto":
                 # HowTo: заголовок — в открывающей строке (:::howto Название), либо первая строка блока
@@ -405,18 +422,17 @@ def render_callouts(body_md: str):
                     step_title = "Шаг"
                 howto_data.append({"name": step_title, "text": desc_html})
                 out.append(
-                    f'<div class="howto-step border-l-4 border-water pl-5 mb-4">'
-                    f'<h3 class="font-display text-lg uppercase mb-1">{escape(step_title)}</h3>'
-                    f'<div class="prose-custom">{desc_html}</div></div>'
+                    f'<h3 class="sub"><span class="h3-num">■</span>{escape(step_title)}</h3>'
+                    f'<div class="prose">{desc_html}</div>'
                 )
             else:
-                # Обычный callout
+                # Обычный callout — тёмная «водная» панель с label
                 cls, default_title = _CALLOUT_TYPES.get(ctype, ("callout-tip", "Совет"))
                 title = custom_title or default_title
                 out.append(
-                    f'<aside class="callout {cls} border border-gray-200 bg-gray-50/50 p-5 my-5">'
-                    f'<p class="font-display text-xs uppercase tracking-widest text-water mb-2">{escape(title)}</p>'
-                    f'<div class="prose-custom">{inner_html}</div></aside>'
+                    f'<aside class="callout {cls}">'
+                    f'<div class="callout-label">{escape(title)}</div>'
+                    f'{inner_html}</aside>'
                 )
             continue
         out.append(line)
@@ -459,7 +475,96 @@ def build_jsonld_howto(howto_data: list[dict], meta: dict) -> str:
     return json.dumps(ld, ensure_ascii=False, indent=2)
 
 
-def build_post(meta: dict, body_md: str, template: str, related_posts: list[dict] | None = None) -> str:
+def build_article_sections(body_html: str):
+    """Разбивает HTML статьи на разделы, нумерует их и строит оглавление.
+
+    Возвращает (lead_html, sections_html, toc_desktop, toc_mobile, count).
+    Определяет уровень секций автоматически: H2, если есть; иначе H3
+    (но не подзаголовки howto с class="sub"). Каждая секция получает номер 01, 02…
+    """
+    # Уровень секций: H2 при наличии, иначе H3
+    has_h2 = bool(re.search(r'<h2\b', body_html))
+    sec_tag = 'h2' if has_h2 else 'h3'
+    # Убираем howto-подзаголовки (class="sub") из рассмотрения, если работаем с H3
+    if not has_h2:
+        body_html_work = re.sub(r'<h3 class="sub"[^>]*>.*?</h3>', '', body_html, flags=re.S)
+    else:
+        body_html_work = body_html
+
+    # Разбиваем на куски: текст и заголовки выбранного уровня
+    parts = re.split(
+        rf'(<{sec_tag}[^>]*id="([^"]+)"[^>]*>.*?</{sec_tag}>)',
+        body_html_work, flags=re.S)
+
+    headings = []  # (id, num, text)
+    lead_html = ""
+    idx = 0
+    if parts and parts[0].strip():
+        lead_html = parts[0].strip()
+        idx = 1
+
+    body_sections_html = []
+    while idx + 2 < len(parts):
+        h_full = parts[idx]
+        h_id = parts[idx + 1]
+        text_after = parts[idx + 2]
+        num = len(headings) + 1
+        h_text = re.sub(r'<[^>]+>', '', h_full).strip()
+        headings.append((h_id, num, h_text))
+        body_sections_html.append(
+            f'<section id="{h_id}">'
+            f'<header class="sec-row"><span class="sec-num">{num:02d}</span>{h_full}</header>'
+            f'{text_after}</section>'
+        )
+        idx += 3
+
+    if idx < len(parts) and parts[idx].strip():
+        body_sections_html.append(parts[idx])
+
+    sections_html = "\n".join(body_sections_html)
+
+    toc_desktop = "\n".join(
+        f'<a class="toc-link" href="#{hid}"><span class="toc-num">{num:02d}</span>{escape(text)}</a>'
+        for hid, num, text in headings
+    )
+    toc_mobile = "\n".join(
+        f'<a class="toc-link" href="#{hid}"><span class="toc-num">{num:02d}</span>{escape(text)}</a>'
+        for hid, num, text in headings
+    )
+    return lead_html, sections_html, toc_desktop, toc_mobile, len(headings)
+
+
+def build_prev_next(current: dict, articles: list[tuple[dict, str]]):
+    """Возвращает (prev_html, next_html) по соседним статьям в общем списке."""
+    metas = [m for m, _ in articles]
+    try:
+        i = next(k for k, m in enumerate(metas) if m.get("slug") == current.get("slug"))
+    except StopIteration:
+        return "", ""
+    prev = metas[i - 1] if i > 0 else None
+    nxt = metas[i + 1] if i < len(metas) - 1 else None
+
+    def card(art, direction):
+        if not art:
+            return ""
+        slug = art.get("slug") or slugify(art["title"])
+        url = f"{BLOG_URL}/{slug}.html"
+        cat = CATEGORY_NAMES.get(art.get("category", ""), "")
+        mins = calc_reading_time(art.get("_body", ""))
+        arrow = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>'
+                 if direction == "prev" else
+                 '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>')
+        label = "Предыдущее руководство" if direction == "prev" else "Следующее руководство"
+        cls = "pn-card" if direction == "prev" else "pn-card next"
+        return (f'<a class="{cls}" href="{url}">'
+                f'<span class="pn-dir">{arrow if direction=="prev" else ""} {label} {arrow if direction=="next" else ""}</span>'
+                f'<span class="pn-title">{escape(art.get("title",""))}</span>'
+                f'<span class="pn-meta">{cat} · {mins} мин</span></a>')
+
+    return card(prev, "prev"), card(nxt, "next")
+
+
+def build_post(meta: dict, body_md: str, template: str, related_posts: list[dict] | None = None, all_articles: list | None = None) -> str:
     from markdown import markdown as md_convert
 
     slug = meta.get("slug") or slugify(meta["title"])
@@ -478,45 +583,20 @@ def build_post(meta: dict, body_md: str, template: str, related_posts: list[dict
     body_md, faq_data, howto_data = render_callouts(body_md)
     body_html = md_convert(body_md, extensions=MD_EXTENSIONS, extension_configs=MD_EXTENSION_CONFIGS)
 
-    toc_html = build_toc_html(extract_headings(body_html))
+    lead_html, sections_html, toc_desktop, toc_mobile, toc_count = build_article_sections(body_html)
     read_min = calc_reading_time(body_md)
     date_fmt = format_date(meta.get("date", ""))
     date_iso = to_iso_date(meta.get("date", ""))
     category = meta.get("category", "")
     category_name = CATEGORY_NAMES.get(category, category)
-
-    tags_raw = meta.get("tags", "")
-    tag_list = [t.strip() for t in tags_raw.split(",") if t.strip()]
-    tags_html = "".join(
-        f'<a href="{BLOG_URL}/?tag={slugify(t)}" '
-        f'class="text-xs border border-gray-300 px-3 py-1 rounded-full '
-        f'hover:bg-black hover:text-white transition">{escape(t)}</a>'
-        for t in tag_list
-    )
+    category_short = CATEGORY_SHORT.get(category, category_name)
 
     jsonld_article = build_jsonld_article(meta, url)
     jsonld_bc = build_jsonld_breadcrumbs(meta, url)
     jsonld_faq = build_jsonld_faq(faq_data)
     jsonld_howto = build_jsonld_howto(howto_data, meta)
 
-    # Related-статьи («С этой статьёй читают»)
-    related_html = ""
-    if related_posts:
-        cards = []
-        for rp in related_posts[:4]:
-            rslug = rp.get("slug") or slugify(rp["title"])
-            rurl = f"{BLOG_URL}/{rslug}.html"
-            rimg = rp.get("image", "")
-            if rimg.startswith("/"):
-                rimg = SITE_URL + rimg
-            rdate = format_date(rp.get("date", ""))
-            cards.append(
-                f'<a href="{rurl}" class="group border border-gray-200 hover:border-water transition flex items-center gap-4 p-3">'
-                f'<img src="{rimg}" alt="{escape(rp.get("image_alt", rp.get("title","")))}" class="w-20 h-14 object-cover" loading="lazy" width="80" height="56">'
-                f'<div><p class="font-mono text-[10px] text-gray-400 mb-1">{rdate}</p>'
-                f'<h3 class="font-display text-sm uppercase leading-tight group-hover:text-water transition">{escape(rp.get("title",""))}</h3></div></a>'
-            )
-        related_html = '<section class="mt-12"><h2 class="font-display text-2xl uppercase mb-4">С этой статьёй читают</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-4">' + "".join(cards) + '</div></section>'
+    prev_html, next_html = build_prev_next(meta, all_articles or [])
 
     return render(
         template,
@@ -533,12 +613,16 @@ def build_post(meta: dict, body_md: str, template: str, related_posts: list[dict
         article_date_iso=date_iso,
         article_author=meta.get("author", AUTHOR_DEFAULT),
         article_category=category_name,
-        article_category_slug=category,
-        article_tags_html=tags_html,
+        article_category_short=category_short,
         article_read_time=str(read_min),
-        article_toc=toc_html,
-        article_body=body_html,
-        article_related=related_html,
+        article_lead_html=lead_html,
+        article_body=sections_html,
+        article_toc_desktop=toc_desktop,
+        article_toc_mobile=toc_mobile,
+        article_toc_count=f"{toc_count:02d}",
+        article_prev=prev_html,
+        article_next=next_html,
+        article_count=str(len(all_articles or [])),
         site_url=SITE_URL,
         blog_url=BLOG_URL,
         site_name=SITE_NAME,
@@ -719,7 +803,7 @@ def build_all(incremental: bool = False):
             if src_md and src_md.exists() and src_md.stat().st_mtime <= output_path.stat().st_mtime:
                 print(f"  ➖ {slug}.html — без изменений")
                 continue
-        html = build_post(meta, body, post_tpl, related_posts=pick_related(meta, articles))
+        html = build_post(meta, body, post_tpl, related_posts=pick_related(meta, articles), all_articles=articles)
         output_path.write_text(html, encoding="utf-8")
         print(f"  ✅ {slug}.html — «{meta['title'][:60]}»")
         built_count += 1
