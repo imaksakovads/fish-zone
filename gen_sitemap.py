@@ -1,4 +1,4 @@
-"""Регенерация sitemap.xml и robots.txt для www.fish-zone.ru (GitHub Pages).
+"""Регенерация sitemap.xml и robots.txt для fish-zone.ru (GitHub Pages).
 
 Сканирует собранные .html в output/ (без index) и генерирует sitemap.xml,
 а также robots.txt со ссылкой на sitemap. Запускать после build.py.
@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 OUTPUT_DIR = ROOT / "output"
-BASE_URL = "https://www.fish-zone.ru"
+BASE_URL = "https://fish-zone.ru"
 TODAY = date.today().isoformat()
 
 SITEMAP_HEAD = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'

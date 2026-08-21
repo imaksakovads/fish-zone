@@ -47,7 +47,7 @@ TEMPLATES_DIR = ROOT / "templates"
 OUTPUT_DIR = ROOT / "output"
 STATIC_DIR = ROOT / "static"
 
-SITE_URL = "https://www.fish-zone.ru"
+SITE_URL = "https://fish-zone.ru"
 BLOG_URL = SITE_URL
 SITE_NAME = "Fish Zone"
 
