@@ -26,7 +26,23 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install markdown
+        run: pip install markdown pytest
+
+      - name: Run unit tests (build.py core)
+        run: python3 -m pytest tests/ -q
+
+      - name: Validate markdown structure (warning, non-blocking)
+        run: |
+          python3 -c "
+          import glob, sys
+          sys.path.insert(0, '.')
+          from tools.validate_md import validate_file
+          from pathlib import Path
+          bad = 0
+          for f in glob.glob('content/*.md'):
+              bad += validate_file(Path(f))
+          print(f'[warn] markdown-валидация: {bad} статей с замечаниями')
+          " || true
 
       - name: Build site
         run: python3 build.py
