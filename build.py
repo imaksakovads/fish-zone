@@ -318,7 +318,7 @@ def build_jsonld_breadcrumbs(meta: dict, url: str) -> str:
 # СБОРКА СТРАНИЦ
 # ═══════════════════════════════════════════════════════════════════
 
-_H1_IN_BODY = re.compile(r"^# [^#]", re.MULTILINE)
+_H1_IN_BODY = re.compile(r"^# (?!#)", re.MULTILINE)
 
 
 def preprocess_markdown(body_md: str) -> tuple[str, list[str]]:
