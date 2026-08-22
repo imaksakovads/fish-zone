@@ -277,16 +277,17 @@ figcaption{margin-top:12px;font-family:var(--font-mono);font-size:12.5px;letter-
   background:var(--bg);border-bottom:2px solid var(--border);
   font-family:var(--font-display);font-size:12px;font-weight:600;
   letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);
-  padding:14px 16px;text-align:left;white-space:nowrap
+  padding:16px 18px;text-align:left;white-space:nowrap
 }
-.ds-table thead th:first-child{width:20%}
-.ds-table thead th:nth-child(2){width:25%}
-.ds-table thead th:nth-child(3){width:28%}
-.ds-table thead th:nth-child(4){width:27%}
-.ds-table tbody td{padding:14px 16px;border-bottom:1px solid var(--border);font-size:15px;line-height:1.55;vertical-align:top;word-wrap:break-word;overflow-wrap:break-word}
+.ds-table thead th:first-child{width:19%}
+.ds-table thead th:nth-child(2){width:23%}
+.ds-table thead th:nth-child(3){width:30%}
+.ds-table thead th:nth-child(4){width:28%}
+.ds-table tbody td{padding:16px 18px;border-bottom:1px solid var(--border);font-size:15px;line-height:1.6;vertical-align:top;word-wrap:break-word;overflow-wrap:break-word}
 .ds-table tbody tr:last-child td{border-bottom:none}
-.ds-table .ds-cond{font-family:var(--font-display);font-weight:600;font-size:16px;color:var(--fg);letter-spacing:0.01em}
-.ds-table .ds-gear{color:var(--fg);font-size:14.5px;font-family:var(--font-mono)}
+.ds-table .ds-cond{font-family:var(--font-display);font-weight:600;font-size:15.5px;color:var(--fg);letter-spacing:0.01em;display:flex;align-items:center;gap:10px}
+.ds-table .ds-cond-dot{width:8px;height:8px;border-radius:50%;flex:none;background:var(--accent);box-shadow:0 0 0 3px oklch(0.520 0.094 223.1/0.15)}
+.ds-table .ds-gear{color:var(--fg);font-size:14.5px}
 .ds-table .ds-bait{color:var(--fg);font-size:14.5px}
 .ds-table .ds-tactic{color:var(--muted);font-size:14.5px}
 .ds-table tbody tr:nth-child(even){background:oklch(0.988 0.003 250)}
@@ -307,23 +308,23 @@ figcaption{margin-top:12px;font-family:var(--font-mono);font-size:12.5px;letter-
   .ds-table tbody tr:last-child{margin-bottom:0}
   .ds-table tbody td{
     display:flex;gap:10px;align-items:flex-start;
-    border-bottom:1px solid var(--border);padding:12px 14px;width:auto;
-    font-size:14.5px;line-height:1.5
+    border-bottom:1px solid var(--border);padding:13px 14px;width:auto;
+    font-size:14.5px;line-height:1.55
   }
   .ds-table tbody tr:last-child td:last-child{border-bottom:none}
   .ds-table .ds-cond{
-    width:auto;font-size:17px;font-weight:600;
-    padding:13px 14px;
+    width:auto;font-size:16px;font-weight:600;
+    padding:14px 14px;
     background:var(--bg);border-bottom:1px solid var(--border);
     color:var(--fg)
   }
   .ds-table tbody td:not(.ds-cond)::before{
-    content:attr(data-label);flex:0 0 76px;
+    content:attr(data-label);flex:0 0 78px;
     font-family:var(--font-display);font-size:11px;font-weight:600;
     letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);
     padding-top:2px;line-height:1.4
   }
-  .ds-table .ds-gear{color:var(--fg);font-size:14.5px;font-family:var(--font-mono)}
+  .ds-table .ds-gear{color:var(--fg);font-size:14.5px}
   .ds-table .ds-bait{color:var(--fg);font-size:14.5px}
   .ds-table .ds-tactic{color:var(--fg);font-size:14.5px}
 }
@@ -627,39 +628,39 @@ figcaption{margin-top:12px;font-family:var(--font-mono);font-size:12.5px;letter-
 </thead>
 <tbody>
 <tr>
-<td class="ds-cond">Мелководье, штиль</td>
+<td class="ds-cond"><span class="ds-cond-dot"></span>Мелководье, штиль</td>
 <td class="ds-gear" data-label="Снасть">Тест до 7 г, шнур 0,06 мм</td>
-<td class="ds-bait" data-label="Приманка">Червь 2 дюйма, естественный цвет</td>
+<td class="ds-bait" data-label="Приманка">Червь 2″, естественный цвет</td>
 <td class="ds-tactic" data-label="Тактика">Медленная проводка, паузы</td>
 </tr>
 <tr>
-<td class="ds-cond">Глубина, яма</td>
+<td class="ds-cond"><span class="ds-cond-dot"></span>Глубина, яма</td>
 <td class="ds-gear" data-label="Снасть">Тест до 15 г, шнур 0,10 мм</td>
-<td class="ds-bait" data-label="Приманка">Нимфа, рачок 2–3 дюйма, тёмный цвет</td>
+<td class="ds-bait" data-label="Приманка">Нимфа, рачок 2–3″, тёмный цвет</td>
 <td class="ds-tactic" data-label="Тактика">Волочение по дну, пауза</td>
 </tr>
 <tr>
-<td class="ds-cond">Течение</td>
+<td class="ds-cond"><span class="ds-cond-dot"></span>Течение</td>
 <td class="ds-gear" data-label="Снасть">Тест до 20 г, шнур 0,12 мм</td>
-<td class="ds-bait" data-label="Приманка">Червь 3–4 дюйма, яркий цвет</td>
+<td class="ds-bait" data-label="Приманка">Червь 3–4″, яркий цвет</td>
 <td class="ds-tactic" data-label="Тактика">Стоянка в точке, контроль натяжения</td>
 </tr>
 <tr>
-<td class="ds-cond">Коряжник, трава</td>
+<td class="ds-cond"><span class="ds-cond-dot"></span>Коряжник, трава</td>
 <td class="ds-gear" data-label="Снасть">Тест до 10 г, офсетный крючок</td>
-<td class="ds-bait" data-label="Приманка">Креатура, червь 3 дюйма</td>
+<td class="ds-bait" data-label="Приманка">Креатура, червь 3″</td>
 <td class="ds-tactic" data-label="Тактика">Точечный заброс, опускание в окна</td>
 </tr>
 <tr>
-<td class="ds-cond">Пассивный окунь</td>
+<td class="ds-cond"><span class="ds-cond-dot"></span>Пассивный окунь</td>
 <td class="ds-gear" data-label="Снасть">Тест до 5 г, шнур 0,06 мм</td>
-<td class="ds-bait" data-label="Приманка">Опарыш, нимфа 1,5 дюйма</td>
+<td class="ds-bait" data-label="Приманка">Опарыш, нимфа 1,5″</td>
 <td class="ds-tactic" data-label="Тактика">Лёгкие шевеления, долгие паузы</td>
 </tr>
 <tr>
-<td class="ds-cond">Жирующий судак</td>
+<td class="ds-cond"><span class="ds-cond-dot"></span>Жирующий судак</td>
 <td class="ds-gear" data-label="Снасть">Тест до 15 г, шнур 0,10 мм</td>
-<td class="ds-bait" data-label="Приманка">Крупный червь 3–4 дюйма</td>
+<td class="ds-bait" data-label="Приманка">Крупный червь 3–4″</td>
 <td class="ds-tactic" data-label="Тактика">Активная, но медленная проводка</td>
 </tr>
 </tbody>

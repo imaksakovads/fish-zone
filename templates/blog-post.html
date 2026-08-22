@@ -151,6 +151,64 @@ figcaption{margin-top:12px;font-family:var(--font-mono);font-size:12.5px;letter-
 .spec-table .c-note{color:var(--muted);font-size:14.5px}
 .spec-table tbody tr:hover td{background:var(--bg)}
 
+/* Таблица условий ловли (drop-shot) */
+.ds-table-wrap{margin:28px 0;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface);box-shadow:0 1px 3px oklch(0.208 0.040 265.8/0.05)}
+.ds-table{width:100%;border-collapse:collapse;table-layout:fixed}
+.ds-table thead th{
+  background:var(--bg);border-bottom:2px solid var(--border);
+  font-family:var(--font-display);font-size:12px;font-weight:600;
+  letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);
+  padding:14px 16px;text-align:left
+}
+.ds-table thead th:first-child{width:20%}
+.ds-table thead th:nth-child(2){width:25%}
+.ds-table thead th:nth-child(3){width:28%}
+.ds-table thead th:nth-child(4){width:27%}
+.ds-table tbody td{padding:14px 16px;border-bottom:1px solid var(--border);font-size:15px;line-height:1.55;vertical-align:top;word-wrap:break-word;overflow-wrap:break-word}
+.ds-table tbody tr:last-child td{border-bottom:none}
+.ds-table .ds-cond{font-family:var(--font-display);font-weight:600;font-size:16px;color:var(--fg);letter-spacing:0.01em}
+.ds-table .ds-gear{color:var(--fg);font-size:14.5px;font-family:var(--font-mono)}
+.ds-table .ds-bait{color:var(--fg);font-size:14.5px}
+.ds-table .ds-tactic{color:var(--muted);font-size:14.5px}
+.ds-table tbody tr:nth-child(even){background:oklch(0.988 0.003 250)}
+.ds-table tbody tr:hover td{background:var(--accent-soft);transition:background 0.15s ease}
+.ds-table tbody tr:hover .ds-cond{color:var(--accent-strong)}
+.ds-table tbody tr:hover .ds-tactic{color:var(--fg)}
+
+@media(max-width:780px){
+  .ds-table-wrap{border:none;border-radius:0;box-shadow:none;margin:24px -4px}
+  .ds-table,.ds-table thead,.ds-table tbody,.ds-table tr{display:block}
+  .ds-table thead{display:none}
+  .ds-table tbody tr{
+    display:grid;gap:0;
+    border:1px solid var(--border);border-radius:12px;
+    margin-bottom:12px;background:var(--surface);overflow:hidden;
+    padding:0
+  }
+  .ds-table tbody tr:last-child{margin-bottom:0}
+  .ds-table tbody td{
+    display:flex;gap:10px;align-items:flex-start;
+    border-bottom:1px solid var(--border);padding:12px 14px;width:auto;
+    font-size:14.5px;line-height:1.5
+  }
+  .ds-table tbody tr:last-child td:last-child{border-bottom:none}
+  .ds-table .ds-cond{
+    width:auto;font-size:17px;font-weight:600;
+    padding:13px 14px;
+    background:var(--bg);border-bottom:1px solid var(--border);
+    color:var(--fg)
+  }
+  .ds-table tbody td:not(.ds-cond)::before{
+    content:attr(data-label);flex:0 0 76px;
+    font-family:var(--font-display);font-size:11px;font-weight:600;
+    letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);
+    padding-top:2px;line-height:1.4
+  }
+  .ds-table .ds-gear{color:var(--fg);font-size:14.5px;font-family:var(--font-mono)}
+  .ds-table .ds-bait{color:var(--fg);font-size:14.5px}
+  .ds-table .ds-tactic{color:var(--fg);font-size:14.5px}
+}
+
 /* Обычные markdown-таблицы → в стиле spec-таблицы */
 .prose table{border-collapse:collapse;width:100%;margin:24px 0;border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 1px 3px oklch(0.208 0.040 265.8/0.05);table-layout:fixed}
 .prose table thead th{background:var(--bg);border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-family:var(--font-display);font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);padding:13px 16px;text-align:left}

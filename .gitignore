@@ -5,3 +5,6 @@ __pycache__/
 .env
 output/
 .critic/
+# OpenDesign временные файлы
+e46ecee3-*/
+drop-shot-table-mobile.html

@@ -344,6 +344,93 @@ def _add_image_dimensions(body_html: str) -> str:
     return re.sub(r"<img[^>]*>", add_dim, body_html)
 
 
+def _style_tables(body_html: str) -> str:
+    """Оборачивает markdown-таблицы в .ds-table-wrap и добавляет классы для адаптивного CSS.
+
+    Markdown-конвертер выдаёт голый <table> с inline text-align.
+    Функция:
+      • оборачивает каждую таблицу в <div class="ds-table-wrap">
+      • добавляет class="ds-table" к <table>
+      • добавляет class="ds-cond" к первому <td> в каждом ряду <tbody>
+      • добавляет data-label="…" к остальным <td> из соответствующих <th>
+      • убирает inline text-align (выравниванием управляет CSS)
+    """
+    if "<table>" not in body_html:
+        return body_html
+
+    def transform_table(m):
+        table_html = m.group(0)
+
+        # собираем подписи из thead для data-label
+        labels = re.findall(r"<th[^>]*>(.*?)</th>", table_html, re.S)
+        labels = [re.sub(r"<[^>]+>", "", l).strip() for l in labels]
+
+        # class на <table>
+        table_html = table_html.replace("<table>", '<table class="ds-table">', 1)
+
+        # обрабатываем <tbody>
+        tbody_match = re.search(r"<tbody>(.*?)</tbody>", table_html, re.S)
+        if tbody_match:
+            tbody_inner = tbody_match.group(1)
+
+            def process_row(row_match):
+                row = row_match.group(0)
+                # все <td> в этом ряду
+                td_pattern = re.compile(r"<td[^>]*>.*?</td>", re.S)
+                tds = td_pattern.findall(row)
+                if not tds:
+                    return row
+
+                # первый <td> → class="ds-cond"
+                first = tds[0]
+                if "ds-cond" not in first:
+                    if "class=" in first:
+                        first = re.sub(
+                            r'class="([^"]*)"', r'class="\1 ds-cond"', first
+                        )
+                    else:
+                        first = first.replace("<td ", '<td class="ds-cond" ', 1).replace(
+                            "<td>", '<td class="ds-cond">', 1
+                        )
+
+                # остальные <td> → data-label
+                rest_new = []
+                for i, td in enumerate(tds[1:]):
+                    label = labels[i + 1] if i + 1 < len(labels) else ""
+                    if "data-label=" not in td:
+                        if "<td " in td or "<td\t" in td:
+                            td = td.replace("<td ", f'<td data-label="{label}" ', 1)
+                        else:
+                            td = td.replace("<td>", f'<td data-label="{label}">', 1)
+                    rest_new.append(td)
+
+                # собираем ряд обратно
+                new_row = row
+                new_row = new_row.replace(tds[0], first, 1)
+                for old, new in zip(tds[1:], rest_new):
+                    new_row = new_row.replace(old, new, 1)
+                return new_row
+
+            new_tbody_inner = re.sub(
+                r"<tr[^>]*>.*?</tr>", process_row, tbody_inner, flags=re.S
+            )
+            table_html = table_html.replace(
+                tbody_inner, new_tbody_inner, 1
+            )
+
+        # убираем inline text-align (выравниванием управляет CSS)
+        table_html = re.sub(r'\s*style="text-align:\s*[a-z]+;?"', "", table_html)
+
+        return f'<div class="ds-table-wrap">\n{table_html}\n</div>'
+
+    return re.sub(
+        r"<table>(?:(?!</table>).)*?</table>",
+        transform_table,
+        body_html,
+        flags=re.S,
+    )
+
+
 # ═══════════════════════════════════════════════════════════════════
 # CALLOUT-ДИРЕКТИВЫ (:::блок) И FAQ/HowTo
 # ═══════════════════════════════════════════════════════════════════
@@ -605,6 +692,9 @@ def build_post(meta: dict, body_md: str, template: str, related_posts: list[dict
 
     # Добавляем width/height к inline-картинкам без размеров (для CLS и PageSpeed)
     body_html = _add_image_dimensions(body_html)
+
+    # Оборачиваем markdown-таблицы в .ds-table-wrap для адаптивного CSS
+    body_html = _style_tables(body_html)
 
     lead_html, sections_html, toc_desktop, toc_mobile, toc_count = build_article_sections(body_html)
     read_min = calc_reading_time(body_md)
