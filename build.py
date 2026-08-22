@@ -330,6 +330,20 @@ def preprocess_markdown(body_md: str) -> tuple[str, list[str]]:
     return body_md, warnings
 
 
+def _add_image_dimensions(body_html: str) -> str:
+    """Добавляет width/height к <img> без них (соотношение 16:9) для CLS/PageSpeed."""
+    # Картинки 16:9 (1344x756) — добавляем стандартные размеры, если нет
+    def add_dim(m):
+        tag = m.group(0)
+        if "width=" in tag and "height=" in tag:
+            return tag
+        # вставляем перед закрывающим >
+        if tag.rstrip().endswith("/>"):
+            return tag[:-2] + ' width="1344" height="756" />'
+        return tag[:-1] + ' width="1344" height="756">'
+    return re.sub(r"<img[^>]*>", add_dim, body_html)
+
+
 # ═══════════════════════════════════════════════════════════════════
 # CALLOUT-ДИРЕКТИВЫ (:::блок) И FAQ/HowTo
 # ═══════════════════════════════════════════════════════════════════
@@ -589,6 +603,9 @@ def build_post(meta: dict, body_md: str, template: str, related_posts: list[dict
     body_md, faq_data, howto_data = render_callouts(body_md)
     body_html = md_convert(body_md, extensions=MD_EXTENSIONS, extension_configs=MD_EXTENSION_CONFIGS)
 
+    # Добавляем width/height к inline-картинкам без размеров (для CLS и PageSpeed)
+    body_html = _add_image_dimensions(body_html)
+
     lead_html, sections_html, toc_desktop, toc_mobile, toc_count = build_article_sections(body_html)
     read_min = calc_reading_time(body_md)
     date_fmt = format_date(meta.get("date", ""))
@@ -647,6 +664,20 @@ def build_index(posts: list[dict], template: str) -> str:
         "publisher": {"@type": "Organization", "name": SITE_NAME, "url": SITE_URL},
     }, ensure_ascii=False, indent=2)
 
+    # WebSite JSON-LD с SearchAction (для Google Sitelinks Searchbox)
+    jsonld_website = json.dumps({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": f"Блог {SITE_NAME}",
+        "url": BLOG_URL,
+        "description": "Блог о спиннинговой ловле: снасти, приманки, техники, виды рыб",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": f"{BLOG_URL}/?s={{search_term_string}}",
+            "query-input": "required name=search_term_string",
+        },
+    }, ensure_ascii=False, indent=2)
+
     # Маппинг категории → data-filter + дуотон-класс + короткая подпись для обложки
     CAT_FILTER = {"technique": "tehniki", "fish": "vidy", "tackle": "snasti", "lure": "tehniki",
                   "rig": "tehniki", "season": "vidy", "rating": "snasti"}
@@ -689,7 +720,7 @@ def build_index(posts: list[dict], template: str) -> str:
         if img_url:
             media = (
                 f'<div class="card-media photo">'
-                f'<img src="{img_url}" alt="{escape(meta.get("image_alt", meta.get("title", "")))}" loading="lazy">'
+                f'<img src="{img_url}" alt="{escape(meta.get("image_alt", meta.get("title", "")))}" loading="lazy" width="1344" height="756">'
                 f'</div>'
             )
         else:
@@ -721,6 +752,7 @@ def build_index(posts: list[dict], template: str) -> str:
         og_image=f"{SITE_URL}/static/fish-zone-preview.png",
         og_image_alt=f"Блог {SITE_NAME}",
         jsonld_blog=jsonld_blog,
+        jsonld_website=jsonld_website,
         article_cards="\n".join(cards) if cards else "",
         article_count=str(len(posts)),
         total_minutes=str(total_min),
