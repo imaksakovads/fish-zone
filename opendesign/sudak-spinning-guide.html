@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Как ловить судака на спиннинг: техника и снасти · FishZone</title>
+  <style>
+    :root{
+      --bg: oklch(0.984 0.003 247.9); --surface: oklch(1.000 0.000 89.9);
+      --fg: oklch(0.208 0.040 265.8); --muted: oklch(0.446 0.037 257.3);
+      --border: oklch(0.929 0.013 255.5); --accent: oklch(0.520 0.094 223.1);
+      --accent-strong: oklch(0.450 0.077 224.3); --accent-soft: oklch(0.953 0.029 221.7);
+      --deep: oklch(0.310 0.060 224.9); --deep-2: oklch(0.260 0.052 225.5);
+      --deep-3: oklch(0.390 0.070 223.5); --on-deep: oklch(0.980 0.004 250.0);
+      --on-deep-muted: oklch(0.780 0.030 226.0); --danger: oklch(0.577 0.245 27.3);
+      --font-display: "Oswald","Arial Narrow",sans-serif; --font-body: "Manrope",system-ui,sans-serif;
+      --font-mono: ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+      --radius: 18px; --shadow: 0 1px 2px oklch(0.208 0.040 265.8/0.04), 0 8px 24px oklch(0.208 0.040 265.8/0.06);
+      --maxw: 1180px;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:96px}
+    body{font-family:var(--font-body);background:var(--bg);color:var(--fg);line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    img{display:block;max-width:100%}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{color:var(--accent-strong)}
+    :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+    ::selection{background:var(--accent);color:#fff}
+
+    /* NAV */
+    .nav{position:sticky;top:0;z-index:50;background:oklch(0.984 0.003 247.9/0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px;position:relative}
+    .brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:600;font-size:21px;letter-spacing:0.04em;text-transform:uppercase;color:var(--fg)}
+    .brand-mark{width:34px;height:34px;border-radius:10px;flex:none;background:linear-gradient(160deg,var(--deep-3),var(--deep));display:grid;place-items:center}
+    .brand-mark svg{width:19px;height:19px}
+    .nav-links{display:flex;align-items:center;gap:28px}
+    .nav-links a{font-family:var(--font-display);font-size:13px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);padding:6px 2px;position:relative}
+    .nav-links a:hover{color:var(--accent-strong)}
+    .nav-links a.active{color:var(--fg)}
+    .nav-links a.active::after{content:"";position:absolute;left:2px;right:2px;bottom:0;height:2px;background:var(--deep);border-radius:2px}
+    .nav-cta{font-family:var(--font-display);font-size:13px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;background:var(--accent);color:#fff;padding:13px 22px;min-height:44px;border-radius:10px;display:inline-flex;align-items:center;gap:8px;transition:background 0.2s ease}
+    .nav-cta:hover{background:var(--accent-strong);color:#fff}
+    .nav-cta svg{width:14px;height:14px}
+    .burger{display:none}
+    .read-progress{position:absolute;left:0;bottom:-1px;height:2px;width:0;background:var(--accent);z-index:3;transition:width 0.08s linear}
+
+    /* HERO СТАТЬИ */
+    .hero{position:relative;color:var(--on-deep);background:radial-gradient(900px 500px at 82% -10%, oklch(0.52 0.094 223.1/0.35), transparent 60%),radial-gradient(700px 420px at -5% 110%, oklch(0.45 0.077 224.3/0.40), transparent 60%),linear-gradient(180deg, var(--deep-2), var(--deep) 70%);overflow:hidden}
+    .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(2px 2px at 20% 30%, oklch(1 0 0/0.35) 50%, transparent 52%),radial-gradient(2px 2px at 70% 18%, oklch(1 0 0/0.28) 50%, transparent 52%),radial-gradient(1.6px 1.6px at 45% 60%, oklch(1 0 0/0.22) 50%, transparent 52%),radial-gradient(1.6px 1.6px at 88% 55%, oklch(1 0 0/0.25) 50%, transparent 52%),radial-gradient(2px 2px at 12% 78%, oklch(1 0 0/0.18) 50%, transparent 52%),radial-gradient(1.5px 1.5px at 58% 85%, oklch(1 0 0/0.2) 50%, transparent 52%);pointer-events:none}
+    .water-rings{position:absolute;right:-180px;top:50%;transform:translateY(-50%);width:640px;height:640px;pointer-events:none;opacity:0.85}
+    .water-rings.rings-left{left:-170px;right:auto;top:auto;bottom:-250px;transform:none;opacity:0.6}
+    .water-rings span{position:absolute;inset:0;border-radius:50%;border:1px solid oklch(1 0 0/0.14)}
+    .water-rings span:nth-child(1){inset:0}.water-rings span:nth-child(2){inset:70px}.water-rings span:nth-child(3){inset:140px}.water-rings span:nth-child(4){inset:210px}.water-rings span:nth-child(5){inset:280px}
+    .article-hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:1.12fr 0.88fr;gap:56px;align-items:center;padding:96px 0 104px}
+    .crumbs{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--font-mono);font-size:12.5px;letter-spacing:0.04em;color:var(--on-deep-muted);margin-bottom:24px}
+    .crumbs a{color:oklch(0.78 0.05 225);padding:4px 0}
+    .crumbs a:hover{color:#fff}
+    .crumbs .sep{color:oklch(1 0 0/0.25)}
+    .crumbs .cur{color:oklch(0.85 0.05 220)}
+    .hero h1{font-family:var(--font-display);font-weight:600;font-size:clamp(32px, 4vw, 46px);line-height:1.08;letter-spacing:-0.01em;text-transform:uppercase;color:var(--on-deep)}
+    .hero-sub{margin-top:20px;max-width:52ch;font-size:17px;line-height:1.65;color:var(--on-deep-muted)}
+    .hero-meta{margin-top:30px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+    .hero-stat{display:flex;align-items:baseline;gap:8px;font-family:var(--font-mono);font-size:13px;color:var(--on-deep-muted)}
+    .hero-stat b{font-family:var(--font-display);font-size:22px;font-weight:600;color:var(--on-deep);letter-spacing:0.02em}
+    .hero-stat time{font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--on-deep);letter-spacing:0.03em}
+    .hero-divider{width:1px;height:26px;background:oklch(1 0 0/0.18)}
+    .hero-chip{font-family:var(--font-display);font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--on-deep);background:oklch(1 0 0/0.07);border:1px solid oklch(1 0 0/0.18);border-radius:999px;padding:8px 14px;min-height:36px;display:inline-flex;align-items:center}
+    .hero-figure{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:4/3.3;background:var(--deep-2);box-shadow:0 24px 60px oklch(0.2 0.05 230/0.4)}
+    .hero-figure img{width:100%;height:100%;object-fit:cover}
+    .hero-figure::after{content:"";position:absolute;inset:0;background:linear-gradient(195deg, oklch(0.26 0.052 225.5/0.1) 35%, oklch(0.26 0.052 225.5/0.62) 100%);pointer-events:none}
+
+    /* МАКЕТ СТАТЬИ */
+    .article-wrap{padding:72px 0 0}
+    .article-grid{display:grid;grid-template-columns:minmax(0,720px) 300px;gap:64px;justify-content:center;align-items:start}
+    .article-lead{font-size:18.5px;line-height:1.66;color:var(--fg);max-width:68ch;margin-bottom:8px}
+    .article > section + section{border-top:1px solid var(--border);margin-top:48px;padding-top:32px}
+    .sec-row{display:flex;align-items:baseline;gap:14px;margin-bottom:22px}
+    .sec-num{font-family:var(--font-display);font-size:clamp(26px, 2.9vw, 34px);font-weight:600;line-height:1.12;letter-spacing:0.02em;color:var(--muted);flex:none}
+    .sec-row h2,.sec-row h3{font-family:var(--font-display);font-weight:600;font-size:clamp(26px, 2.9vw, 34px);line-height:1.12;letter-spacing:0.01em;text-transform:uppercase}
+    .article-body h5{font-family:var(--font-display);font-weight:600;font-size:20px;line-height:1.25;letter-spacing:0.02em;text-transform:uppercase;margin:30px 0 12px}
+    .article-body p{margin:1.05em 0;font-size:17px;line-height:1.72;color:var(--fg);max-width:68ch}
+    .article-body p strong{color:var(--fg);font-weight:600}
+    .val{font-family:var(--font-mono);font-size:14.5px;font-weight:500;color:var(--fg);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 7px;white-space:nowrap}
+    h3.sub{display:flex;align-items:baseline;gap:12px;font-family:var(--font-display);font-weight:600;font-size:20px;line-height:1.25;letter-spacing:0.02em;text-transform:uppercase;margin:30px 0 12px}
+    .h3-num{font-family:var(--font-mono);font-size:11.5px;color:var(--muted);letter-spacing:0.05em;flex:none}
+
+    /* спойлер — тёмная панель */
+    .callout{position:relative;overflow:hidden;background:linear-gradient(160deg, var(--deep-3), var(--deep));border-radius:var(--radius);padding:30px 32px;margin:30px 0;color:var(--on-deep)}
+    .callout::after{content:"";position:absolute;right:-70px;bottom:-120px;width:280px;height:280px;border-radius:50%;border:1px solid oklch(1 0 0/0.12);box-shadow:0 0 0 40px oklch(1 0 0/0.04), 0 0 0 80px oklch(1 0 0/0.03);pointer-events:none}
+    .callout-label{position:relative;z-index:1;display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:oklch(0.82 0.07 205)}
+    .callout-label::before{content:"";width:7px;height:7px;border-radius:50%;flex:none;background:oklch(0.75 0.12 190);box-shadow:0 0 0 4px oklch(0.75 0.12 190/0.2)}
+    .callout p{position:relative;z-index:1;margin-top:14px;font-size:16.5px;line-height:1.68;color:var(--on-deep);max-width:60ch}
+    .callout p strong{color:var(--on-deep);font-weight:600}
+
+    /* иллюстрации-дуотоны */
+    .figure{margin:34px 0}
+    .figure-media{position:relative;display:flex;align-items:flex-end;padding:20px;border-radius:16px;overflow:hidden;aspect-ratio:16/9;color:#fff}
+    .figure-media::before{content:"";position:absolute;inset:0;opacity:0.5;z-index:1;background:radial-gradient(320px 320px at 85% 12%, oklch(0.75 0.12 190/0.5), transparent 70%),radial-gradient(240px 240px at 12% 88%, oklch(0.55 0.10 210/0.55), transparent 70%)}
+    .figure-media .rings{position:absolute;inset:-20% -10% auto auto;width:75%;aspect-ratio:1;pointer-events:none;z-index:1}
+    .figure-media .rings i{position:absolute;border:1.5px solid oklch(1 0 0/0.22);border-radius:50%}
+    .figure-media .rings i:nth-child(1){inset:8%}.figure-media .rings i:nth-child(2){inset:24%}.figure-media .rings i:nth-child(3){inset:40%}.figure-media .rings i:nth-child(4){inset:56%}
+    .figure-media .figure-label{position:relative;z-index:2;font-family:var(--font-display);font-weight:600;font-size:24px;line-height:1.12;text-transform:uppercase;letter-spacing:0.01em;text-shadow:0 2px 14px oklch(0.2 0.05 230/0.45)}
+    .figure-media.f1{background:linear-gradient(155deg, oklch(0.56 0.10 205), oklch(0.38 0.08 218))}
+    .figure-media.f2{background:linear-gradient(155deg, oklch(0.52 0.09 228), oklch(0.34 0.07 234))}
+    figcaption{margin-top:12px;font-family:var(--font-mono);font-size:12.5px;letter-spacing:0.02em;color:var(--muted);max-width:68ch}
+
+    /* шпаргалка */
+    .table-wrap{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--surface);margin-top:6px}
+    .spec-table{width:100%;border-collapse:collapse}
+    .spec-table th{font-family:var(--font-display);font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:13px 18px;background:var(--bg);border-bottom:1px solid var(--border)}
+    .spec-table td{padding:15px 18px;border-bottom:1px solid var(--border);vertical-align:top;font-size:15px;line-height:1.55}
+    .spec-table tr:last-child td{border-bottom:none}
+    .spec-table .c-param{font-weight:600;color:var(--fg);width:24%}
+    .spec-table .c-val{font-family:var(--font-mono);font-size:14px;color:var(--fg);width:26%}
+    .spec-table .c-note{color:var(--muted);font-size:14.5px}
+    .spec-table tbody tr:hover td{background:var(--bg)}
+
+    /* обычные markdown-таблицы → в стиле spec-таблицы */
+    .article-body table{border-collapse:collapse;width:100%;margin:24px 0;border:1px solid var(--border);border-radius:16px;overflow:hidden}
+    .article-body table thead th{background:var(--bg);border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-family:var(--font-display);font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);padding:13px 16px;text-align:left}
+    .article-body table thead th:last-child{border-right:none}
+    .article-body table tbody td{padding:13px 16px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-size:14.5px;line-height:1.55;vertical-align:top}
+    .article-body table tbody td:last-child{border-right:none}
+    .article-body table tbody tr:last-child td{border-bottom:none}
+    .article-body table tbody tr:nth-child(even){background:oklch(0.985 0.002 250)}
+    .article-body table tbody tr:hover td{background:var(--bg)}
+    .article-body table{margin-top:6px}
+
+    /* FAQ */
+    .faq{margin-top:8px}
+    .faq-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden;transition:border-color 0.2s ease}
+    .faq-item[data-open="true"]{border-color:oklch(0.80 0.03 230)}
+    .faq-q{width:100%;display:flex;align-items:center;gap:14px;padding:19px 20px;background:none;border:none;cursor:pointer;text-align:left;font-family:var(--font-body);font-size:16px;font-weight:600;color:var(--fg);min-height:58px}
+    .faq-num{font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.05em;color:var(--muted);border:1px solid var(--border);border-radius:7px;padding:3px 8px;flex:none}
+    .faq-chev{margin-left:auto;flex:none;width:16px;height:16px;color:var(--muted);transition:transform 0.25s ease}
+    .faq-item[data-open="true"] .faq-chev{transform:rotate(180deg)}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height 0.3s ease}
+    .faq-a p{padding:0 20px 20px 54px;color:var(--muted);font-size:15.5px;line-height:1.65;max-width:62ch}
+
+    /* ОГЛАВЛЕНИЕ */
+    .toc{position:sticky;top:104px}
+    .toc-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px}
+    .toc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .toc-title{font-family:var(--font-display);font-size:14px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--fg)}
+    .toc-count{font-family:var(--font-mono);font-size:11.5px;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:2px 9px}
+    .toc-card nav{display:flex;flex-direction:column;gap:2px}
+    .toc-link{display:flex;align-items:baseline;gap:10px;padding:9px 10px;border-radius:9px;font-size:13.5px;line-height:1.35;color:var(--muted);transition:background 0.15s ease, color 0.15s ease}
+    .toc-link .toc-num{font-family:var(--font-mono);font-size:11px;letter-spacing:0.05em;color:var(--muted);flex:none}
+    .toc-link:hover{color:var(--fg);background:var(--bg)}
+    .toc-link.active{background:var(--deep);color:#fff}
+    .toc-link.active .toc-num{color:oklch(0.85 0.06 210)}
+    .toc-foot{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.03em;color:var(--muted);display:flex;align-items:center;justify-content:space-between}
+    .toc-foot .pct{color:var(--fg);font-weight:600}
+    .toc-mobile{display:none}
+
+    /* PREV / NEXT */
+    .pn-sec{padding:64px 0 0}
+    .pn-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .pn-card{display:flex;flex-direction:column;gap:10px;padding:26px 28px;background:var(--surface);border:1px solid var(--border);border-radius:16px;transition:transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease}
+    .pn-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:oklch(0.85 0.03 225)}
+    .pn-dir{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)}
+    .pn-dir svg{width:13px;height:13px;color:var(--muted)}
+    .pn-title{font-family:var(--font-display);font-weight:600;font-size:19px;line-height:1.28;letter-spacing:0.01em;text-transform:uppercase;color:var(--fg)}
+    .pn-card:hover .pn-title{color:var(--accent-strong)}
+    .pn-meta{font-family:var(--font-mono);font-size:12px;letter-spacing:0.03em;color:var(--muted)}
+    .pn-card.next{align-items:flex-end;text-align:right}
+    .pn-card.next .pn-dir{flex-direction:row-reverse}
+
+    /* CTA */
+    .sec{padding:84px 0}
+    .cta-band{background:radial-gradient(760px 380px at 90% 0%, oklch(0.52 0.094 223.1/0.3), transparent 65%),linear-gradient(180deg, var(--deep-2), var(--deep));color:var(--on-deep);border-radius:24px;padding:64px 64px 60px;position:relative;overflow:hidden;display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center}
+    .cta-band::after{content:"";position:absolute;right:-120px;bottom:-160px;width:460px;height:460px;border-radius:50%;border:1px solid oklch(1 0 0/0.12);box-shadow:0 0 0 60px oklch(1 0 0/0.04), 0 0 0 120px oklch(1 0 0/0.03);pointer-events:none}
+    .cta-kicker{font-family:var(--font-mono);font-size:12.5px;letter-spacing:0.05em;color:oklch(0.82 0.07 205);text-transform:uppercase;margin-bottom:14px}
+    .cta-band h2{font-family:var(--font-display);font-weight:600;font-size:clamp(28px, 3.2vw, 40px);line-height:1.1;letter-spacing:-0.01em;text-transform:uppercase;max-width:16ch}
+    .cta-band p{margin-top:16px;color:var(--on-deep-muted);max-width:46ch;font-size:15.5px}
+    .cta-form{display:flex;gap:10px;margin-top:28px;max-width:440px}
+    .cta-form input{flex:1;min-width:0;height:50px;padding:0 18px;border-radius:11px;border:1px solid oklch(1 0 0/0.2);background:oklch(1 0 0/0.08);color:var(--on-deep);font-family:var(--font-body);font-size:15px}
+    .cta-form input::placeholder{color:oklch(0.8 0.03 225/0.75)}
+    .cta-form input:focus{outline:2px solid oklch(0.75 0.12 195);outline-offset:2px;background:oklch(1 0 0/0.12)}
+    .cta-form button{height:50px;padding:0 24px;border:none;border-radius:11px;cursor:pointer;font-family:var(--font-display);font-size:13.5px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--deep);background:#fff;transition:transform 0.15s ease, box-shadow 0.2s ease;box-shadow:0 8px 24px oklch(0.2 0.05 230/0.3)}
+    .cta-form button:hover{transform:translateY(-2px)}
+    .cta-form button:active{transform:translateY(0)}
+    .cta-note{margin-top:12px;font-size:12.5px;color:oklch(0.78 0.03 225/0.8)}
+    .cta-rings{position:relative;height:280px}
+    .cta-rings .r{position:absolute;border-radius:50%;border:1px solid oklch(1 0 0/0.14)}
+    .cta-rings .r1{inset:calc(50% - 130px)}.cta-rings .r2{inset:calc(50% - 82px)}.cta-rings .r3{inset:calc(50% - 40px)}.cta-rings .r4{inset:calc(50% - 6px)}
+    .cta-rings .drop{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;background:oklch(0.8 0.11 195);box-shadow:0 0 0 10px oklch(0.8 0.11 195/0.25)}
+
+    /* FOOTER */
+    .footer{border-top:1px solid var(--border);padding:52px 0 40px;margin-top:84px}
+    .footer-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:32px;flex-wrap:wrap}
+    .footer .brand{font-size:19px}
+    .footer-desc{max-width:34ch;color:var(--muted);font-size:13.5px;margin-top:12px}
+    .footer-col h4{font-family:var(--font-display);font-size:12px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--fg);margin-bottom:14px}
+    .footer-col a{display:block;color:var(--muted);font-size:14px;padding:4px 0}
+    .footer-col a:hover{color:var(--accent-strong)}
+    .footer-bottom{margin-top:40px;padding-top:22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--font-mono);font-size:12px;color:var(--muted);letter-spacing:0.03em}
+
+    /* RESPONSIVE */
+    @media (max-width: 980px){
+      .article-hero-grid{grid-template-columns:1fr;gap:40px;padding:72px 0 84px}
+      .hero-figure{aspect-ratio:16/9}
+      .article-grid{grid-template-columns:minmax(0,720px);gap:0}
+      .toc{display:none}
+      .toc-mobile{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;margin:26px 0 34px;-webkit-overflow-scrolling:touch}
+      .toc-mobile a{flex:none;display:inline-flex;align-items:baseline;gap:8px;font-size:13px;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:10px 16px;min-height:42px}
+      .toc-mobile a .toc-num{font-family:var(--font-mono);font-size:11px;color:var(--muted)}
+      .toc-mobile a.active{background:var(--deep);border-color:var(--deep);color:#fff}
+      .toc-mobile a.active .toc-num{color:oklch(0.85 0.06 210)}
+      .cta-band{grid-template-columns:1fr;padding:48px 36px}
+      .cta-rings{display:none}
+      .nav-links{display:none}
+      .burger{display:grid;place-items:center;width:44px;height:44px;border-radius:10px;border:1px solid var(--border);background:var(--surface);cursor:pointer}
+      .burger svg{width:20px;height:20px}
+      .nav-links.open{display:flex;flex-direction:column;align-items:flex-start;gap:6px;position:absolute;top:68px;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);padding:18px 24px 22px;box-shadow:var(--shadow)}
+      .nav-links.open a{padding:10px 0}
+    }
+    @media (max-width: 640px){
+      .article-wrap{padding:56px 0 0}
+      .hero h1{font-size:30px}
+      .article-hero-grid{padding:60px 0 72px}
+      .pn-grid{grid-template-columns:1fr}
+      .pn-card.next{align-items:flex-start;text-align:left}
+      .pn-card.next .pn-dir{flex-direction:row}
+      .sec{padding:64px 0}
+      .cta-band{padding:40px 26px}
+      .cta-form{flex-direction:column}
+      .cta-form button{width:100%}
+      .article-body table{display:block;overflow-x:auto;white-space:nowrap}
+      .article-body p{font-size:16.5px}
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav" data-od-id="topnav">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html" aria-label="FishZone — на главную блога">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V6"/><path d="M12 6C7 6 4 8.5 3.5 11c.5 2.5 3.5 5 8.5 5s8-2.5 8.5-5C20 8.5 17 6 12 6z"/><path d="M10.5 6.5c.5-.7 1.4-1.2 2.6-1.4.5 1 .2 1.9-.6 2.4"/></svg>
+        </span>
+        FishZone
+      </a>
+      <nav class="nav-links" id="navLinks" aria-label="Основная навигация">
+        <a href="index.html#articles" class="active">Статьи <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">6</span></a>
+        <a href="index.html#categories">Категории</a>
+        <a href="index.html#digest">Дайджест</a>
+      </nav>
+      <a class="nav-cta" href="#digest" data-od-id="cta-subscribe-top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        Подписаться
+      </a>
+      <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <span class="read-progress" id="readProgress" aria-hidden="true"></span>
+    </div>
+  </header>
+
+  <main id="content">
+
+    <section class="hero" data-od-id="hero">
+      <div class="water-rings rings-left" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="container">
+        <div class="article-hero-grid">
+          <div>
+            <nav class="crumbs" aria-label="Хлебные крошки">
+              <a href="index.html">Блог</a><span class="sep">/</span>
+              <a href="index.html#articles">Виды рыб</a><span class="sep">/</span>
+              <span class="cur">Рыбы</span>
+            </nav>
+            <h1>Как ловить судака на спиннинг: техника и снасти</h1>
+            <p class="hero-sub">Судак — это не щука. Он не прощает разгильдяйства и не бросается на каждую железку подряд. Это ночной охотник, который видит в темноте лучше тебя, и хищник с узкой специализацией.</p>
+            <div class="hero-meta">
+              <span class="hero-stat"><time datetime="2026-08-18">18.08.2026</time></span>
+              <span class="hero-divider" aria-hidden="true"></span>
+              <span class="hero-stat"><b>17</b> мин чтения</span>
+              <span class="hero-divider" aria-hidden="true"></span>
+              <span class="hero-chip">Виды рыб</span>
+            </div>
+          </div>
+          <figure class="hero-figure">
+            <img src="assets/lovit-sudaka-spinning-tehnika-snasti-hero.webp" alt="Сумерки на глубокой реке — судак выходит на охоту" width="1344" height="768" loading="eager">
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="article-wrap" data-od-id="article">
+      <div class="container article-grid">
+
+        <article class="article">
+          <p>Судак — это не щука. Он не прощает разгильдяйства и не бросается на каждую железку подряд. Это ночной охотник, который видит в темноте лучше тебя, и хищник с узкой специализацией. Если ты привык к простым решениям, судак быстро поставит тебя на место.</p>
+          <p>Ошибка новичка проста. Он берёт тяжёлый джиг, едет на реку и кидает в первое попавшееся место. Часа три монотонной проводки, одна поклёвка — и та сход. Потом человек говорит, что судака нет. А судак есть. Просто он стоял в двадцати метрах от этой точки и ждал, когда ему подадут приманку правильно.</p>
+          <p>Чтобы ловить его стабильно, мало просто купить дорогой спиннинг. Нужно понять логику его движений, сезонные миграции и суточный ритм. И только потом собирать снасть под задачу.</p>
+
+          <nav class="toc-mobile" aria-label="Содержание статьи" data-od-id="toc-mobile">
+            <a class="toc-link" href="#biologiya"><span class="toc-num">01</span>Хищник, который видит ночью</a>
+            <a class="toc-link" href="#sezony"><span class="toc-num">02</span>Сезонная логика судака</a>
+            <a class="toc-link" href="#snasti"><span class="toc-num">03</span>Собираем снасть с цифрами</a>
+            <a class="toc-link" href="#primanki"><span class="toc-num">04</span>Приманки: когда какая работает</a>
+            <a class="toc-link" href="#tehnika"><span class="toc-num">05</span>Техника ловли пошагово</a>
+            <a class="toc-link" href="#usloviya"><span class="toc-num">06</span>Сценарии сложных условий</a>
+            <a class="toc-link" href="#tablica"><span class="toc-num">07</span>Сводная таблица по условиям</a>
+            <a class="toc-link" href="#itog"><span class="toc-num">08</span>Итог</a>
+            <a class="toc-link" href="#katuska"><span class="toc-num">09</span>Какая катушка нужна под твой стиль</a>
+          </nav>
+
+          <div class="article-body">
+
+            <section id="biologiya" data-od-id="biologiya">
+              <header class="sec-row"><span class="sec-num">01</span><h2>Хищник, который видит ночью</h2></header>
+              <p>Судак устроен иначе, чем окунь или щука. Его глаза имеют светоотражающий слой, который улавливает даже слабый лунный свет. Это делает его грозой ночных водоёмов. Днём он уходит на глубину и стоит в укрытии, а с наступлением сумерек выходит на охоту.</p>
+              <p>Важно понимать его рацион. Основу составляют узкотелые рыбы: уклейка, пескарь, елец, молодь густеры. Судак не тратит энергию на широкую добычу. Ему легко заглотить рыбу, которую можно проглотить целиком, не разжёвывая. Поэтому его пасть сравнительно узкая, и приманки он предпочитает соответствующие.</p>
+              <p>Ещё одна деталь. Судак держится стаями. Если ты поймал одного, то с высокой вероятностью в точке стоят ещё несколько особей. Но стая — это не хаотичное скопление. Внутри есть иерархия, и крупные особи занимают лучшие позиции у дна, а молодь держится чуть выше и по краям.</p>
+              <p>Течение для него критично. Судак любит участки с обратным течением или с плавным замедлением потока. Он не стоит в основной струе, тратя силы на сопротивление. Его зона — это граница между быстрой и медленной водой, где скапливается кормовая рыба.</p>
+            </section>
+
+            <section id="sezony" data-od-id="sezony">
+              <header class="sec-row"><span class="sec-num">02</span><h2>Сезонная логика судака</h2></header>
+              <p>Весна начинается после нереста. Это примерно конец апреля или начало мая в средней полосе. Рыба отходит от нерестилищ и начинает активно восстанавливать силы. Ключевое окно — это прогрев воды до 10–12 градусов. В это время судак выходит на прибрежные бровки и поливы с глубинами 2–4 метра, где вода прогревается быстрее.</p>
+              <p>Летом картина меняется. Судак уходит на глубины и ведёт ночной образ жизни. Ключевые точки — это русловые свалы, бровки, закоряженные ямы. Днём он стоит в самых тёмных углах, а активничает с 22 часов до 2 ночи и под утро. Летняя рыбалка — это рыбалка по фонарику и по точному знанию рельефа.</p>
+              <p>Осень — это золотая пора для охоты за клыкастым. После первых заморозков вода начинает остывать, и рыба начинает нагуливать жир перед зимой. Судак переходит на дневное питание, активность смещается на светлое время суток. Лучшие месяцы — это сентябрь и октябрь. В ноябре он уходит на зимовальные ямы, и поймать его сложнее.</p>
+              <p>Зимой судак стоит на ямах и кормится крайне вяло. Но это не значит, что его невозможно поймать. Вертикальное блеснение и балансиры работают, но требуют от рыболова максимальной концентрации. Поклёвка зимой — это часто лёгкий тычок или просто остановка блесны.</p>
+            </section>
+
+            <section id="snasti" data-od-id="snasti">
+              <header class="sec-row"><span class="sec-num">03</span><h2>Собираем снасть с цифрами</h2></header>
+              <p>Подбор снасти зависит от условий ловли, но есть базовый набор, который покроет большинство ситуаций.</p>
+              <p><strong>Удилище для джига.</strong> Для ловли с берега на реке оптимальным будет спиннинг длиной <span class="val">2,4 м</span> с тестом <span class="val">10–30 г</span>. Такой бланк позволит делать дальние забросы и уверенно контролировать проводку на течении. Для лодочной ловли подойдёт длина <span class="val">2,1–2,2 м</span> с тестом <span class="val">7–21 г</span>. Строй удилища быстрый: он даёт резкую подсечку и позволяет просекать плотную пасть судака. Медленный бланк оставит тебя без засечки.</p>
+              <figure class="figure">
+                <img src="assets/lovit-sudaka-spinning-tehnika-snasti-stroy.webp" alt="Строй спиннинга: как гнётся бланк удилища под нагрузкой" loading="lazy">
+                <figcaption>Строй бланка: быстрый гнётся в верхней трети и даёт резкую подсечку, нужную для плотной пасти судака.</figcaption>
+              </figure>
+              <p><strong>Катушка</strong> нужна размером <span class="val">2500–3000</span>. Передаточное число выше <span class="val">5.2</span>. Судак не требует силовой подмотки, но темп проводки может быть высоким. Фрикцион обязателен: резкие рывки в глубину он компенсирует и не даёт рыбе сойти на ослабленном шнуре.</p>
+              <p><strong>Плетёный шнур</strong> диаметром <span class="val">0,10–0,14 мм</span>, разрывная нагрузка <span class="val">6–8 кг</span>. Плетёнка не должна тянуться — тогда ты будешь чувствовать даже слабое касание приманкой дна. Толстый шнур создаёт парусность и сносит лёгкие приманки течением, тонкий — режет пальцы.</p>
+              <p><strong>Поводок.</strong> Для чисто судачьей ловли лучше использовать флюорокарбон диаметром <span class="val">0,28–0,35 мм</span> — он менее заметен в воде и не отпугивает осторожную рыбу. Если рядом есть щука, ставь металлический поводок длиной <span class="val">15–20 см</span>: судак зубами леску не режет, а щука — режет.</p>
+            </section>
+
+            <section id="primanki" data-od-id="primanki">
+              <header class="sec-row"><span class="sec-num">04</span><h2>Приманки: когда какая работает</h2></header>
+              <p><img src="assets/lovit-sudaka-spinning-tehnika-snasti-primanki.webp" alt="Приманки для судака: джиг-головки, силикон и колеблющиеся блёсны" loading="lazy"></p>
+              <p>Разнообразие приманок для судака огромно, но все их можно разделить по условиям применения.</p>
+              <p><strong>Силиконовые приманки</strong> — это база. Основной размер — <span class="val">3–4 дюйма</span>. Твистеры и виброхвосты с узким телом. Классика от Акрон, Хаос, Святогор. Они делают активную игру даже на медленной проводке. На течении используй более тяжёлую огрузку, чтобы приманка достигла дна быстро.</p>
+              <p><strong>Колеблющиеся блёсны.</strong> Судак реагирует на них в период активного жора осенью. Колебалка весом <span class="val">15–25 г</span> с узким телом. Проводка равномерная или с небольшими паузами. Лучше работают блёсны с серебристой или голубой окраской, имитирующие уклейку.</p>
+              <p><strong>Воблеры для судака</strong> имеют свои особенности. Это минноу с узким телом и заглублением <span class="val">2–6 м</span>. Классика от Бомбер, Смит, Мегабас. Твичинговая проводка с резкими рывками и паузами: судак атакует в момент остановки воблера, когда тот замирает и слегка всплывает.</p>
+              <p><strong>Джиг-головки с разнесённым монтажом.</strong> Это шарнирный монтаж, где грузило отделено от крючка. Он даёт большую свободу движения приманке и особенно эффективен на течении, где силиконка играет натуральнее.</p>
+              <div class="callout" data-od-id="callout-color">
+                <div class="callout-label">Цвет приманки</div>
+                <p><strong>Цвет приманки важен.</strong> В мутной воде работает тёмный цвет: коричневый, чёрный, тёмно-зелёный. В чистой воде лучше серебро и белый с лёгким отливом. В сумерках кислотные цвета дают преимущество.</p>
+              </div>
+            </section>
+
+            <section id="tehnika" data-od-id="tehnika">
+              <header class="sec-row"><span class="sec-num">05</span><h2>Техника ловли пошагово</h2></header>
+              <p><img src="assets/lovit-sudaka-spinning-tehnika-snasti-dzhig.webp" alt="Ступенчатая джиговая проводка на глубине" loading="lazy"></p>
+              <p>Стандартная джиговая проводка — это не просто равномерная намотка. Это цикл, который включает заброс, паузу для опускания, серию оборотов, снова паузу. Важно контролировать каждое касание дна.</p>
+              <h5 id="dzhig">Классический джиг</h5>
+              <p>Делаешь заброс в точку. Ждёшь, когда приманка коснётся дна — обычно это <span class="val">2–5 секунд</span> в зависимости от глубины. После касания делаешь 2–3 оборота катушки. Скорость подмотки должна быть такой, чтобы приманка шла у самого дна, иногда чиркая по нему. После подмотки — снова пауза до касания дна. Цикл повторяешь.</p>
+              <p>Пауза — это ключевой момент. Судак часто берёт именно в момент падения приманки на дно. Если ты просто равномерно крутишь катушку, ты пропускаешь <strong>70% поклёвок</strong>.</p>
+              <h5 id="stupenka">Ступенька с волочением</h5>
+              <p>Этот вариант применяется, когда дно чистое, без травы и коряг. Опустил приманку на дно, сделал один оборот катушки так, чтобы грузик протащился по дну несколько сантиметров, потом пауза. Такая проводка медленная и провоцирует пассивного судака длинной паузой.</p>
+              <h5 id="tviching">Твичинг воблера</h5>
+              <p>Резкий рывок удилищем в сторону, затем подмотка слабины, снова рывок. Пауза от <span class="val">2 до 5 секунд</span>. В момент паузы воблер всплывает и дрожит. Судак атакует именно в момент зависания. Важно делать рывки разной амплитуды, чтобы найти ту игру, на которую рыба реагирует сегодня.</p>
+              <h5 id="podsechka">Подсечка и вываживание</h5>
+              <p>Подсечка должна быть резкой и короткой. Судак имеет костистую пасть, и слабая подсечка просто не пробьёт её. После подсечки сразу начинай вываживание. Не давай рыбе уйти в корягу. Удилище держи под углом <span class="val">45°</span>, не поднимай вертикально. Поддерживай постоянное натяжение шнура.</p>
+            </section>
+
+            <section id="usloviya" data-od-id="usloviya">
+              <header class="sec-row"><span class="sec-num">06</span><h2>Сценарии сложных условий</h2></header>
+              <h5 id="melkovode">Мелководье</h5>
+              <p>Судак на мели — это ночная история. Глубины <span class="val">1,5–2 м</span>, песчаные косы. Здесь лучше работают лёгкие джиг-головки <span class="val">8–12 г</span> и воблеры-минноу с мелким заглублением. Проводка медленная, с максимально длинными паузами.</p>
+              <h5 id="glubina">Глубина</h5>
+              <p>Если рыба стоит на глубине <span class="val">6–10 м</span>, нужен тяжёлый джиг <span class="val">30–40 г</span>. Важно быстро доставить приманку на дно. Используй более тонкий шнур, чтобы минимизировать парусность. На глубине судак берёт увереннее, но и вываживание требует терпения.</p>
+              <h5 id="koryazhnik">Коряжник</h5>
+              <p>Самые сложные условия. Здесь каждый заброс — риск зацепа, но и судак стоит именно там. Используй офсетный крючок и незацепляйку. Проводка должна быть медленной, без резких рывков. Грузило лучше использовать от <span class="val">20 г</span>, чтобы оно быстро пробивало толщу воды и меньше цеплялось за ветки.</p>
+            </section>
+
+            <section id="tablica" data-od-id="tablica">
+              <header class="sec-row"><span class="sec-num">07</span><h2>Сводная таблица по условиям</h2></header>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Условия</th>
+                    <th>Снасть</th>
+                    <th>Приманка</th>
+                    <th>Тактика</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Весна, берег, 2–4 м</td>
+                    <td>Спиннинг 2,4 м, тест 10–30, шнур 0,12</td>
+                    <td>Силикон 3–4″, джиг 14–18 г</td>
+                    <td>Классический джиг с длинными паузами</td>
+                  </tr>
+                  <tr>
+                    <td>Лето, ночь, 4–8 м</td>
+                    <td>Спиннинг 2,1 м, тест 7–21, шнур 0,10</td>
+                    <td>Воблер-минноу, глубина 3–5 м</td>
+                    <td>Медленный твичинг с паузами до 5 сек</td>
+                  </tr>
+                  <tr>
+                    <td>Осень, день, 5–10 м</td>
+                    <td>Спиннинг 2,4 м, тест 15–40, шнур 0,14</td>
+                    <td>Силикон 4–5″, джиг 25–35 г</td>
+                    <td>Ступенька с волочением по дну</td>
+                  </tr>
+                  <tr>
+                    <td>Коряжник</td>
+                    <td>Спиннинг 2,4 м, тест 10–30, шнур 0,12</td>
+                    <td>Незацепляйка, офсетный крючок</td>
+                    <td>Медленная проводка с подёргиваниями</td>
+                  </tr>
+                  <tr>
+                    <td>Глубокий свал</td>
+                    <td>Спиннинг 2,6 м, тест 20–50, шнур 0,14</td>
+                    <td>Тяжёлая колебалка 25–40 г</td>
+                    <td>Равномерная проводка в среднем темпе</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section id="itog" data-od-id="itog">
+              <header class="sec-row"><span class="sec-num">08</span><h2>Итог</h2></header>
+              <p>Успех в ловле судака — это не магия и не удача. Это система: знание точек, правильная подача приманки и терпение. Начни с классического джига на глубинах <span class="val">4–6 м</span>. Ставь силикон естественного цвета. Используй паузы. Через несколько рыбалок ты начнёшь чувствовать разницу между пустым дном и рыбой под ним.</p>
+              <p>Если ты впервые выходишь на судака, забудь о воблерах и блёснах. Освой джиг — он даёт больше контроля и информации. И не бойся экспериментировать со скоростью проводки: сегодня судак взял на медленную ступеньку, а завтра ему подавай агрессивный твичинг. Подстраивайся под рыбу, и результат не заставит себя ждать.</p>
+            </section>
+
+            <section id="katuska" data-od-id="katuska">
+              <header class="sec-row"><span class="sec-num">09</span><h2>Какая катушка нужна под твой стиль</h2></header>
+              <p>Катушка — это сердце спиннинговой снасти. Можно купить дорогой бланк и шнур, но дешёвая катушка с люфтами и плохой укладкой убьёт всю магию. Дорогая катушка на кривых руках не поможет. Поэтому к выбору надо подходить с холодной головой и знанием конкретных цифр.</p>
+              <p>Рынок предлагает сотни моделей, цены — от тысячи до ста тысяч рублей. Новичок смотрит на красивый корпус и количество подшипников, а потом мучается с бородами и плохим забросом. Эксперт смотрит на вес, передаточное число и материал шестерён.</p>
+
+              <figure class="figure">
+                <img src="assets/lovit-sudaka-spinning-tehnika-snasti-katuska.webp" alt="Настройка фрикциона и шпули катушки" loading="lazy">
+                <figcaption>Передний фрикцион настраивается на берегу и точно отстраивается под разрывную нагрузку плетёнки.</figcaption>
+              </figure>
+
+              <div class="callout" data-od-id="callout-summary">
+                <div class="callout-label">Вывод за 30 секунд</div>
+                <p><strong>Вывод за 30 секунд.</strong> Для ловли на джиг и твичинг в пресной воде выбирай катушку размером <span class="val" style="background:oklch(1 0 0/0.1);border-color:oklch(1 0 0/0.2);color:var(--on-deep)">2500</span> по классификации Шимано. Вес до <span class="val" style="background:oklch(1 0 0/0.1);border-color:oklch(1 0 0/0.2);color:var(--on-deep)">230 г</span>. Передаточное число <span class="val" style="background:oklch(1 0 0/0.1);border-color:oklch(1 0 0/0.2);color:var(--on-deep)">6.2:1</span>. Фрикцион с передним расположением. Стоимость от 8 до 15 тысяч рублей.</p>
+              </div>
+
+              <p>За эти деньги ты получаешь алюминиевую шпулю, стабильный фрикцион и запас по прочности на несколько сезонов. Дороже покупать нет смысла, если ты не ловишь трофейного тайменя на Енисее. Дешевле брать тоже не стоит — люфты появятся через месяц.</p>
+
+              <div class="callout" data-od-id="callout-experience">
+                <div class="callout-label">Опыт автора</div>
+                <p><strong>Опыт автора.</strong> Я перебрал больше двадцати катушек за десять лет — от китайского нонейма за две тысячи до флагманов за сорок. Разница между катушкой за три и за десять тысяч огромная. А вот между моделями за десять и за двадцать тысяч разница уже не такая заметная — прибавка идёт только в весе и плавности хода.</p>
+              </div>
+
+              <p><strong>Ключевой параметр — масса.</strong> Бери катушку до <span class="val">230 г</span>. Если она тяжелее, баланс удилища нарушается, рука устаёт через час активного твичинга. Равновесие должно быть чуть выше катушкодержателя. Уронил катушку — проверь, не появился ли люфт ручки. Есть люфт — неси обратно в магазин, это брак.</p>
+              <p><strong>Передаточное число</strong> решает, насколько быстро ты ведёшь приманку. <span class="val">6.2:1</span> — оптимальная скорость для классических проводок джига и твичинга. Число выше <span class="val">7.0:1</span> оставь для делво-вокеров на море или ловли окуня на микроколебалки. Низкое число <span class="val">4.7:1</span> используй для травления шнура на больших глубинах.</p>
+
+              <div class="callout" data-od-id="callout-warning">
+                <div class="callout-label">Частая ошибка</div>
+                <p><strong>Частая ошибка.</strong> Покупать катушку с задним фрикционом для джига. Задний фрикцион не позволяет быстро менять усилие при вываживании: одна рука занята удилищем, вторая крутит ручку. Чтобы ослабить фрикцион, нужно отпустить ручку и переложить удилище — пока ты это делаешь, щука уходит в коряги.</p>
+              </div>
+
+              <p>Передний фрикцион настраивается большим пальцем руки, которая держит удилище, — это экономит секунды. А на вываживании трофея секунды решают всё. Также проверь плавность хода: вращай ручку медленно, не должно быть заеданий и щелчков. Обратное вращение ротора должно быть почти бесшумным — если слышен треск, эта катушка долго не проживёт.</p>
+
+              <div class="callout" data-od-id="callout-myth">
+                <div class="callout-label">Миф и правда</div>
+                <p><strong>Миф и правда.</strong> Есть миф, что чем больше подшипников, тем лучше катушка. Это не так. Восемь подшипников — это норма, двенадцать — уже маркетинг. Качество подшипников важнее количества: японские и немецкие ходят годами, китайские забиваются пылью за сезон. Смотри на марку, а не на количество.</p>
+              </div>
+
+              <p>Смотри на шпулю. Она должна быть алюминиевой, без напыления. Пластиковые шпули выходят из строя быстро и начинают люфтить. Диаметр шпули напрямую влияет на дальность заброса: для размера <span class="val">2500</span> стандартный диаметр <span class="val">45–46 мм</span>. На 2500 влезает <span class="val">150 м</span> шнура диаметром <span class="val">0,16 мм</span> — этого хватит для любых условий.</p>
+
+              <div class="callout" data-od-id="callout-secret">
+                <div class="callout-label">Секрет</div>
+                <p><strong>Секрет.</strong> При выборе катушки проверь усилие фрикциона на малых нагрузках. Дома зажми шпулю рукой и попробуй прокрутить. На минимальном усилии шпуля должна стопориться мгновенно. На максимальном — шнур должен стравливаться рывками без инерции. Это тест на плавность работы конусного механизма.</p>
+              </div>
+
+              <p>Если ты ловишь джигом на реке с течением, бери размер <span class="val">3000</span> с большим запасом шнура. Для окуня на микроджиг хватит размера <span class="val">1000</span>. Для щуки на твичинг крупных воблеров бери <span class="val">2500</span> с пониженным передаточным числом. Не гонись за универсальностью — лучше купить две катушки под разные задачи.</p>
+
+              <div class="callout" data-od-id="callout-tip">
+                <div class="callout-label">Совет</div>
+                <p><strong>Совет.</strong> После покупки не поленись смазать катушку тонкой смазкой. На заводе их смазывают консервантом, который густеет на морозе, и первый выезд при минусовой температуре может закончиться клином. Разбери, протри, смажь и собери — процедура занимает полчаса, зато катушка ходит шелково весь сезон.</p>
+              </div>
+
+              <p>Если собираешься рыбачить часто, заведи запасную шпулю. На основной храни шнур <span class="val">0,14 мм</span>, на запасной намотай <span class="val">0,16 мм</span> для условий, когда нужна прочность. Утром в траве ставишь шпулю с толстым шнуром, днём на чистой воде меняешь на тонкий — без перемотавок. Это экономит время и нервы.</p>
+              <p>Взвесь, какую рыбу ты ловишь: окунь до килограмма — размер <span class="val">1000–1500</span>; щука до трёх килограмм и джиг — <span class="val">2500</span>; трофейная щука на воблеры — <span class="val">3000</span>. Для нерешительных бери <span class="val">2500</span> как компромисс — он закрывает большинство задач.</p>
+
+              <h5 id="balans">Проверка снасти в руках</h5>
+              <p>Балансируй катушку на удилище: в идеале вся снасть должна лежать на пальце под катушкодержателем без смещения. Если катушка тянет вниз — ищи легче. Если удилище перевешивает — катушка тяжеловата для этого бланка. Допустимый предел отклонения — не более <span class="val">5%</span>.</p>
+              <p>Намотай шнур, вращая ручку в среднем темпе, и смотри на укладку витков: они должны ложиться ровно, параллельно друг другу, без горбов и провалов. Особое внимание удели краям шпули — если витки сползают, во время заброса будет борода.</p>
+              <p>Вращай ручку без шнура и почувствуй каждую передачу. Хорошая катушка не должна щёлкать, при нажатии на ручку не должно быть люфта. Покачай катушку в руках — никаких внутренних стуков. Подержи пару минут, почувствуй эргономику: ручка должна ложиться в ладонь, как будто её делали под тебя.</p>
+
+              <h5 id="faq">Частые вопросы</h5>
+              <div class="faq" data-od-id="faq">
+                <div class="faq-item" data-open="false">
+                  <button class="faq-q" aria-expanded="false"><span class="faq-num">Q1</span>Какой размер катушки лучше для начинающего?<svg class="faq-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+                  <div class="faq-a"><p>Бери 2500. Это самый универсальный размер: позволяет ловить и окуня с ультралайтом, и щуку с джигом. Ошибку сложно сделать, если не гнаться за экстримом. Дальше поймёшь, какие задачи преобладают, и добавишь катушку под них.</p></div>
+                </div>
+                <div class="faq-item" data-open="false">
+                  <button class="faq-q" aria-expanded="false"><span class="faq-num">Q2</span>Правда ли, что дорогие катушки не убить?<svg class="faq-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+                  <div class="faq-a"><p>Нет. Они весят меньше и работают плавнее, но тоже ломаются — особенно если не следить за ними. Песок и вода убивают любую механику. Я видел катушки за сорок тысяч, которые умирали за сезон из-за отсутствия обслуживания. Уход решает больше, чем цена.</p></div>
+                </div>
+                <div class="faq-item" data-open="false">
+                  <button class="faq-q" aria-expanded="false"><span class="faq-num">Q3</span>Стоит ли экономить на катушке для спиннинга?<svg class="faq-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+                  <div class="faq-a"><p>Категорично скажу — нет. Это механизм, который работает под нагрузкой. Дешёвая катушка подведёт на рыбалке: или фрикцион возьмёт, или шестерни сотрутся. Экономия в две тысячи обернётся новыми тратами через год. Бери качественный середняк и не вспоминай о катушке несколько лет.</p></div>
+                </div>
+                <div class="faq-item" data-open="false">
+                  <button class="faq-q" aria-expanded="false"><span class="faq-num">Q4</span>Как понять, что пора менять катушку?<svg class="faq-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+                  <div class="faq-a"><p>Признаки есть: шум при вращении, люфт ручки, неравномерная укладка, фрикцион медленно возвращается при ослаблении. Если эти симптомы появились — считай бюджет на новую. Ремонт иногда обходится в половину цены новой, это невыгодно.</p></div>
+                </div>
+              </div>
+            </section>
+
+          </div>
+        </article>
+
+        <aside class="toc" aria-label="Содержание статьи" data-od-id="toc-sidebar">
+          <div class="toc-card">
+            <div class="toc-head">
+              <span class="toc-title">Содержание</span>
+              <span class="toc-count">09</span>
+            </div>
+            <nav>
+              <a class="toc-link" href="#biologiya"><span class="toc-num">01</span>Хищник, который видит ночью</a>
+              <a class="toc-link" href="#sezony"><span class="toc-num">02</span>Сезонная логика судака</a>
+              <a class="toc-link" href="#snasti"><span class="toc-num">03</span>Собираем снасть с цифрами</a>
+              <a class="toc-link" href="#primanki"><span class="toc-num">04</span>Приманки: когда какая работает</a>
+              <a class="toc-link" href="#tehnika"><span class="toc-num">05</span>Техника ловли пошагово</a>
+              <a class="toc-link" href="#usloviya"><span class="toc-num">06</span>Сценарии сложных условий</a>
+              <a class="toc-link" href="#tablica"><span class="toc-num">07</span>Сводная таблица по условиям</a>
+              <a class="toc-link" href="#itog"><span class="toc-num">08</span>Итог</a>
+              <a class="toc-link" href="#katuska"><span class="toc-num">09</span>Какая катушка нужна под твой стиль</a>
+            </nav>
+            <div class="toc-foot">
+              <span>Прочитано</span>
+              <span class="pct" id="tocPct">0%</span>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <section class="pn-sec" data-od-id="prevnext">
+      <div class="container">
+        <div class="pn-grid">
+          <a class="pn-card" href="#">
+            <span class="pn-dir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Предыдущее руководство</span>
+            <span class="pn-title">Как ловить щуку на спиннинг: полное руководство для начинающих</span>
+            <span class="pn-meta">Виды рыб · 5 мин</span>
+          </a>
+          <a class="pn-card next" href="#">
+            <span class="pn-dir"> Следующее руководство <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+            <span class="pn-title">Как выбрать катушку для спиннинга: полный гид</span>
+            <span class="pn-meta">Снасти · 23 мин</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="digest" data-od-id="newsletter">
+      <div class="container">
+        <div class="cta-band">
+          <div>
+            <div class="cta-kicker">Дайджест FishZone</div>
+            <h2>Одна поклёвка в неделю — в вашей почте</h2>
+            <p>Короткое письмо о новых руководствах: одна техника, одна приманка, одна точка. Без спама — только то, что работает на воде.</p>
+            <form class="cta-form" id="digestForm" data-od-id="newsletter-form">
+              <label for="emailInput" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Электронная почта</label>
+              <input id="emailInput" type="email" required placeholder="ваш@email.ru" autocomplete="email">
+              <button type="submit">Подписаться</button>
+            </form>
+            <p class="cta-note" id="formNote">Письма приходят раз в неделю. Отписка — в один клик.</p>
+          </div>
+          <div class="cta-rings" aria-hidden="true">
+            <span class="r r1"></span><span class="r r2"></span><span class="r r3"></span><span class="r r4"></span>
+            <span class="drop"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" data-od-id="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <a class="brand" href="index.html" aria-label="FishZone — на главную">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V6"/><path d="M12 6C7 6 4 8.5 3.5 11c.5 2.5 3.5 5 8.5 5s8-2.5 8.5-5C20 8.5 17 6 12 6z"/><path d="M10.5 6.5c.5-.7 1.4-1.2 2.6-1.4.5 1 .2 1.9-.6 2.4"/></svg>
+            </span>
+            FishZone
+          </a>
+          <p class="footer-desc">Журнал о спиннинге: одна техника, одна приманка, одна точка.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Разделы</h4>
+          <a href="index.html#articles">Статьи</a>
+          <a href="index.html#categories">Категории</a>
+          <a href="index.html#digest">Дайджест</a>
+        </div>
+        <div class="footer-col">
+          <h4>Контакты</h4>
+          <a href="mailto:hello@fish-zone.ru">hello@fish-zone.ru</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 FishZone</span>
+        <span>Сделано с любовью к воде</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Прогресс чтения + подсветка TOC
+    var readProgress = document.getElementById('readProgress');
+    var tocPct = document.getElementById('tocPct');
+    var tocLinks = Array.prototype.slice.call(document.querySelectorAll('.toc-link'));
+    var secs = tocLinks.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); }).filter(Boolean);
+    function onScroll() {
+      var doc = document.documentElement;
+      var total = doc.scrollHeight - window.innerHeight;
+      var pct = total > 0 ? Math.min(100, Math.round((window.scrollY / total) * 100)) : 0;
+      if (readProgress) readProgress.style.width = pct + '%';
+      if (tocPct) tocPct.textContent = pct + '%';
+      var current = 0;
+      var probe = window.scrollY + 120;
+      secs.forEach(function (s, i) { if (s && s.offsetTop <= probe) current = i; });
+      tocLinks.forEach(function (a, i) { a.classList.toggle('active', i === current); });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Бургер-меню
+    var burger = document.getElementById('burger');
+    var navLinks = document.getElementById('navLinks');
+    if (burger && navLinks) {
+      burger.addEventListener('click', function () {
+        var open = navLinks.classList.toggle('open');
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    }
+
+    // FAQ-аккордеон
+    document.querySelectorAll('.faq-item').forEach(function (item) {
+      var btn = item.querySelector('.faq-q');
+      var ans = item.querySelector('.faq-a');
+      btn.addEventListener('click', function () {
+        var open = item.getAttribute('data-open') === 'true';
+        item.setAttribute('data-open', open ? 'false' : 'true');
+        btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+        ans.style.maxHeight = open ? '0px' : ans.scrollHeight + 'px';
+      });
+    });
+
+    // Форма дайджеста
+    var form = document.getElementById('digestForm');
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var btn = form.querySelector('button');
+        btn.textContent = 'Готово ✓';
+        btn.disabled = true;
+        var note = document.getElementById('formNote');
+        if (note) note.textContent = 'Спасибо! Проверьте почту для подтверждения.';
+        setTimeout(function () {
+          btn.textContent = 'Подписаться';
+          btn.disabled = false;
+          if (note) note.textContent = 'Письма приходят раз в неделю. Отписка — в один клик.';
+        }, 3000);
+      });
+    }
+  </script>
+</body>
+</html>
