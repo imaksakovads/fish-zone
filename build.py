@@ -685,22 +685,18 @@ def build_index(posts: list[dict], template: str) -> str:
         duo = CAT_DUO.get(cat, "d1")
         label = duo_label(meta.get("title", ""), cat)
 
-        # Медиа: фото если есть, иначе дуотон
+        # Медиа: фото если есть, иначе дуотон (без надписей на обложке)
         if img_url:
             media = (
                 f'<div class="card-media photo">'
                 f'<img src="{img_url}" alt="{escape(meta.get("image_alt", meta.get("title", "")))}" loading="lazy">'
-                f'<span class="card-no">№ {i:02d}</span>'
-                f'<span class="card-cat">{escape(cat_name or "")}</span>'
-                f'<span class="duo-label">{escape(label)}</span></div>'
+                f'</div>'
             )
         else:
             media = (
                 f'<div class="card-media duo {duo}">'
                 f'<div class="rings" aria-hidden="true"><i></i><i></i><i></i><i></i></div>'
-                f'<span class="card-no">№ {i:02d}</span>'
-                f'<span class="card-cat">{escape(cat_name or "")}</span>'
-                f'<span class="duo-label">{escape(label)}</span></div>'
+                f'</div>'
             )
 
         card = (
